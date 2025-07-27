@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/KhushAlam/ecom/static/css/main.d2fb6c4c.css",
+    "main.js": "/KhushAlam/ecom/static/js/main.80b7f32e.js",
+    "index.html": "/KhushAlam/ecom/index.html",
+    "main.d2fb6c4c.css.map": "/KhushAlam/ecom/static/css/main.d2fb6c4c.css.map",
+    "main.80b7f32e.js.map": "/KhushAlam/ecom/static/js/main.80b7f32e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d2fb6c4c.css",
+    "static/js/main.80b7f32e.js"
+  ]
+}
