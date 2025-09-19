@@ -36,7 +36,6 @@ export default function Navbar() {
                   +91 8092492943
                 </span>
               </a>
-
             </div>
           </div>
           <div className="col-md-3 col-6">

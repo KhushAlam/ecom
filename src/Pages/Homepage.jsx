@@ -87,7 +87,7 @@ export default function Homepage() {
                     data-aos="zoom-out"
                   >
                     <img
-                      src="assets/img/banners/banner1.jpg"
+                      src="%PUBLIC_URL%/assets/img/banners/banner1.jpg"
                       className="img-fluid animated"
                       alt=""
                     />
@@ -123,7 +123,7 @@ export default function Homepage() {
                     data-aos="zoom-out"
                   >
                     <img
-                      src="assets/img/banners/banner2.jpg"
+                      src="%PUBLIC_URL%/assets/img/banners/banner2.jpg"
                       className="img-fluid animated"
                       alt=""
                     />
@@ -159,7 +159,7 @@ export default function Homepage() {
                     data-aos="zoom-out"
                   >
                     <img
-                      src="assets/img/banners/banner3.jpg"
+                      src="/assets/img/banners/banner3.jpg"
                       className="img-fluid animated"
                       alt=""
                     />

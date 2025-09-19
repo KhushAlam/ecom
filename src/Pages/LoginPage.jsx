@@ -31,6 +31,7 @@ export default function LoginPage() {
     let item = response.find(x => (x.username === data.username && x.password === data.password) || (x.email.toLowerCase() === data.username.toLowerCase() && x.password === data.password))
     if (item && item.active === "fa") {
       seterrormassege("Your Account is Blocked Contract us For unBlock")
+      return
     } else if (item) {
       localStorage.setItem("login", true)
       localStorage.setItem("name", item.name)
