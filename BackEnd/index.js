@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors"
 import dotenv from "dotenv"
 import Connectdb from "./Database/db.js"
+import cloudnary from "./Database/cloudnary.js";
+import maincategoryRouter from "./Routers/maincategoryRouter.js"
 dotenv.config();
 
 
@@ -18,6 +20,8 @@ app.use(express.json())
 Connectdb()
 
 
+//Routes
+app.use("/admin/maincategory", maincategoryRouter)
 app.listen(port, () => {
     console.log("server running on port 8080")
 });
