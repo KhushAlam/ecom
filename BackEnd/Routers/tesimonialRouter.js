@@ -59,7 +59,7 @@ testimonalRouter.post("/create", upload.single("pic"), async (req, res) => {
     }
 })
 
-testimonalRouter.put("/update", upload.single("pic"), async (req, res) => {
+testimonalRouter.put("/update/:id", upload.single("pic"), async (req, res) => {
     try {
         const { id } = req.params;
         const existdata = await TestimonialModel.findById(id);
@@ -85,7 +85,7 @@ testimonalRouter.put("/update", upload.single("pic"), async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 })
-testimonalRouter.delete("/delete", async (req, res) => {
+testimonalRouter.delete("/delete/:id", async (req, res) => {
     try {
         let { id } = req.params
         let deleted = await TestimonialModel.findByIdAndDelete(id)
