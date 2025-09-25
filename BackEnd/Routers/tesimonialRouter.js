@@ -1,14 +1,14 @@
 import express from "express";
 import TestimonialModel from "../Models/testimonialSchema.js";
 import multer from "multer";
-import cloudnary from "../Database/cloudnary";
+import cloudnary from "../Database/cloudinary.js";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const testimonalRouter = express.Router();
 
 //file handling using multer and cloudinary
 
-const storage = CloudinaryStorage({
+const storage = new CloudinaryStorage({
     cloudinary: cloudnary,
     params: {
         folder: "Testimonial",
@@ -68,15 +68,15 @@ testimonalRouter.put("/update/:id", upload.single("pic"), async (req, res) => {
             return res.status(404).json({ message: "Data not Found" });
         }
 
-        const { name, active, message } = req.body;
-        const updatedName = name ? name : existdata.name;
-        const updatedmessage = message ? message : existdata.message
-        const updatedActive = active ? active : existdata.active;
-        const updatedPic = req.file ? req.file.path : existdata.pic;
+        let { name, active, message } = req.body;
+        name = name ? name : existdata.name;
+        message = message ? message : existdata.message
+        active = active ? active : existdata.active;
+        let pic = req.file ? req.file.path : existdata.pic;
 
         const updatedData = await TestimonialModel.findByIdAndUpdate(
             id,
-            { name: updatedName, active: updatedActive, pic: updatedPic, message: updatedmessage },
+            { name: name, active: active, pic: pic, message: message },
             { new: true, runValidators: true }
         );
 

@@ -25,8 +25,8 @@ export default function Adminmaincategorycreate() {
 
   function getinputdata(e) {
     var name = e.target.name
-    var value = e.target.files && e.target.files.length ? "subcategory/" + e.target.files[0].name : e.target.value
-    // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
+    // var value = e.target.files && e.target.files.length ? "subcategory/" + e.target.files[0].name : e.target.value
+    var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
     seterrormassege((old) => {
       return {
         ...old,
@@ -59,15 +59,14 @@ export default function Adminmaincategorycreate() {
         })
         return
       }
-      dispach(Createsubcategory({ ...data }))
 
-      // for real backend
+      const Fromdata = new FormData()
+      Object.keys(data).forEach(key => {
+        Fromdata.append(key, data[key])
+      })
 
-      //   let fromdata=new FormData()
-      // fromdata.append("name",data.name);
-      // fromdata.append("pic",data.pic);
-      // fromdata.append("active",data.active)
-      // dispach(Createmaincategory(fromdata))
+      dispach(Createsubcategory(Fromdata));
+
       navigate("/admin/subcategory");
     }
   }

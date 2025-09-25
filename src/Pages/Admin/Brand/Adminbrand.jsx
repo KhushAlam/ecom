@@ -14,7 +14,7 @@ export default function Adminbrand() {
 
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
-      dispach(deletebrand({id:id}))
+      dispach(deletebrand({ id: id }))
       getapidata();
     }
   }
@@ -32,7 +32,7 @@ export default function Adminbrand() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [brandstatedata.length])
+  }, [brandstatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -44,7 +44,7 @@ export default function Adminbrand() {
           <div className="col-md-9">
             <h5 className="text-center p-2 bg-primary w-100 text-light">
               Brand
-              <Link to="/admin/brand/create" className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>
+              <Link to="/admin/brand/create" className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>
                 <i className="fa fa-plus text-light float-end"></i>
               </Link>
             </h5>
@@ -57,20 +57,20 @@ export default function Adminbrand() {
                     <th>Pic</th>
                     <th>Active</th>
                     <th>Edit</th>
-                    <th className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>Delete</th>
+                    <th className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
                     brandstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                      return <tr key={item._id}>
+                        <td>{item._id?.slice(0,4)}</td>
                         <td>{item.name}</td>
-                        <td><Link to={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} target="_blank">
-                          <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} height={60} width={60} /></Link></td>
+                        <td><Link to={`${item.pic}`} target="_blank">
+                          <img src={`${item.pic}`} height={60} width={60} /></Link></td>
                         <td>{item.active ? "Yes" : "No"}</td>
-                        <td> <Link to={`/admin/brand/update/${item.id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                        <td> <Link to={`/admin/brand/update/${item._id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
+                        <td className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

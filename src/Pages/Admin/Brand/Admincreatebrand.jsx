@@ -25,8 +25,8 @@ export default function Admincreatebrand() {
 
   function getinputdata(e) {
     var name = e.target.name
-    var value = e.target.files && e.target.files.length ? "brand/" + e.target.files[0].name : e.target.value
-    // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
+    // var value = e.target.files && e.target.files.length ? "brand/" + e.target.files[0].name : e.target.value
+    var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
     seterrormassege((old) => {
       return {
         ...old,
@@ -41,7 +41,7 @@ export default function Admincreatebrand() {
       }
     })
   }
- function postinputdata(e) {
+  function postinputdata(e) {
     e.preventDefault()
     let error = Object.values(errormassege).find(x => x !== "")
     if (error) {
@@ -59,22 +59,19 @@ export default function Admincreatebrand() {
         })
         return
       }
-      dispach(Createbrand({...data}))
 
-      // for real backend
-      
-    //   let fromdata=new FormData()
-    // fromdata.append("name",data.name);
-    // fromdata.append("pic",data.pic);
-    // fromdata.append("active",data.active)
-    // dispach(Createbrand(fromdata))
+      const Fromdata = new FormData()
+      Object.keys(data).forEach(element => {
+        Fromdata.append(element, data[element])
+      });
+
+      dispach(Createbrand(Fromdata));
       navigate("/admin/brand");
     }
   }
   useEffect(() => {
     dispach(getbrand())
-    
-  })
+  },[])
 
   return (
     <>

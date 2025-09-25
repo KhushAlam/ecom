@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import cloudnary from "../Database/cloudnary.js";
+import cloudnary from "../Database/cloudinary.js";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import Productmodel from "../Models/productSchema.js";
 

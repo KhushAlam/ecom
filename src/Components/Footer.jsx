@@ -17,19 +17,23 @@ export default function Footer() {
       setmessage("This Email Address is Already Registered with us ")
     }
     else {
-      dispatch(CreateNewslatter({ email: email }))
+      const Fromdata = new FormData();
+      Fromdata.append("email", email);
+      Fromdata.append("message", message);
+
+      dispatch(CreateNewslatter(Fromdata));
       setmessage("Thanks For Subscribe Our NewsLatter Service Now We Can Send Email Regarding New Products or Offer's")
       // setmessage("")
     }
-    
+
   }
 
 
-  useEffect(() => {
-    (() => {
-      dispatch(getNewslatter())
-    })()
-  }, [newslatterstatedata.length])
+  // useEffect(() => {
+  //   (() => {
+  //     dispatch(getNewslatter())
+  //   })()
+  // }, [newslatterstatedata.length])
 
   return (
     <>

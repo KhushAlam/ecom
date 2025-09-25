@@ -1,7 +1,7 @@
 import express from "express"
 import multer from "multer"
 import { CloudinaryStorage } from "multer-storage-cloudinary"
-import cloudnary from "../Database/cloudnary.js";
+import cloudnary from "../Database/cloudinary.js";
 import ContactusModel from "../Models/contactusSchema.js";
 
 const contactusRouter = express.Router()

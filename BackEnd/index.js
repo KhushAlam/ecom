@@ -9,7 +9,8 @@ import newslatterRouter from "./Routers/newslatterRouter.js";
 import contactusRouter from "./Routers/contactusRouter.js";
 import brandRouter from "./Routers/brandRouter.js";
 import productRouter from "./Routers/productRoter.js";
-import userRouter from "./Routers/userRouter.js"
+import userRouter from "./Routers/userRouter.js";
+import checkoutRouter from "./Routers/checkoutRouter.js";
 dotenv.config();
 
 
@@ -18,7 +19,11 @@ const app = express()
 
 //middleware 
 app.use(express.urlencoded({ extended: true }))
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost:3000",  // React app ka origin
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}))
 app.use(express.json())
 
 
@@ -31,10 +36,11 @@ app.use("/admin/maincategory", maincategoryRouter)
 app.use("/admin/subcategory", subcategoryRouter)
 app.use("/admin/testimonial", testimonalRouter)
 app.use("/admin/newslatter", newslatterRouter)
-app.use("admin/contactus", contactusRouter)
-app.use("admin/brand", brandRouter)
-app.use("admin/product", productRouter)
-app.use("user",userRouter);
+app.use("/admin/contactus", contactusRouter)
+app.use("/admin/brand", brandRouter)
+app.use("/admin/product", productRouter)
+app.use("/user", userRouter);
+app.use("/checkout", checkoutRouter)
 app.listen(port, () => {
     console.log("server running on port 8080")
 });

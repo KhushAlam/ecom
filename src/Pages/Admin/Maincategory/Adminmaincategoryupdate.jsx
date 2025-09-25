@@ -29,7 +29,7 @@ export default function Adminmaincategoryupdate() {
 
     function getinputdata(e) {
         var name = e.target.name
-        var value = e.target.files && e.target.files.length ? "maincategory/" + e.target.files[0].name : e.target.value
+        var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
 
         seterrormassege((old) => {
             return {
@@ -63,16 +63,22 @@ export default function Adminmaincategoryupdate() {
                 })
                 return
             }
-            dispach(updatemaincategory({...data}))
+
+            const Fromdata = new FormData();
+            Object.keys(data).forEach(key =>
+                Fromdata.append(key, data[key])
+            )
+
+            dispach(updatemaincategory(Fromdata));
             navigate("/admin/maincategory");
         }
     }
     useEffect(() => {
         dispach(getmaincategory())
-        if (maincategorystatedata.length) {
-            setdata(maincategorystatedata.find(x => x.id === id))
+        if (maincategorystatedata?.length) {
+            setdata(maincategorystatedata?.find(x => x._id === id))
         }
-    }, [maincategorystatedata.length])
+    }, [])
     return (
         <>
             <Breadcrum title="Admin" />

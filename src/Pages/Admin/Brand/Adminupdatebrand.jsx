@@ -29,7 +29,7 @@ export default function Adminupdatebrand() {
 
     function getinputdata(e) {
         var name = e.target.name
-        var value = e.target.files && e.target.files.length ? "brand/" + e.target.files[0].name : e.target.value
+        var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
 
         seterrormassege((old) => {
             return {
@@ -52,7 +52,7 @@ export default function Adminupdatebrand() {
             setshow(true)
         }
         else {
-            let item = brandstatedata.find(x => x.id !== id && x.name.toLowerCase() === data.name.toLowerCase())
+            let item = brandstatedata.find(x => x._id !== id && x.name.toLowerCase() === data.name.toLowerCase())
             if (item) {
                 setshow(true)
                 seterrormassege((old) => {
@@ -63,16 +63,20 @@ export default function Adminupdatebrand() {
                 })
                 return
             }
-            dispach(updatebrand({...data}))
+            const Formdata = new FormData()
+            Object.keys(data).forEach(key => {
+                Formdata.append(key, data[key])
+            })
+            dispach(updatebrand(Formdata))
             navigate("/admin/brand");
         }
     }
     useEffect(() => {
         dispach(getbrand())
         if (brandstatedata.length) {
-            setdata(brandstatedata.find(x => x.id === id))
+            setdata(brandstatedata.find(x => x._id === id))
         }
-    }, [brandstatedata.length])
+    }, [])
     return (
         <>
             <Breadcrum title="Admin" />

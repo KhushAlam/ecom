@@ -29,7 +29,7 @@ export default function Adminsubcategoryupdate() {
 
     function getinputdata(e) {
         var name = e.target.name
-        var value = e.target.files && e.target.files.length ? "subcategory/" + e.target.files[0].name : e.target.value
+        var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
 
         seterrormassege((old) => {
             return {
@@ -52,7 +52,7 @@ export default function Adminsubcategoryupdate() {
             setshow(true)
         }
         else {
-            let item = subcategorystatedata.find(x => x.id !== id && x.name.toLowerCase() === data.name.toLowerCase())
+            let item = subcategorystatedata.find(x => x._id !== id && x.name.toLowerCase() === data.name.toLowerCase())
             if (item) {
                 setshow(true)
                 seterrormassege((old) => {
@@ -63,16 +63,25 @@ export default function Adminsubcategoryupdate() {
                 })
                 return
             }
-            dispach(updatesubcategory({...data}))
+
+            const Fromdata = new FormData()
+            Object.keys(data).forEach(key => {
+                Fromdata.append(key, data[key])
+            })
+            dispach(updatesubcategory(Fromdata))
             navigate("/admin/subcategory");
         }
     }
+
+
     useEffect(() => {
         dispach(getsubcategory())
         if (subcategorystatedata.length) {
-            setdata(subcategorystatedata.find(x => x.id === id))
+            setdata(subcategorystatedata.find(x => x._id === id))
         }
-    }, [subcategorystatedata.length])
+    }, [])
+
+    
     return (
         <>
             <Breadcrum title="Admin" />

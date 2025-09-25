@@ -4,17 +4,14 @@ export default function brandReducer(state=[], action) {
         case CREATE_BRAND_RED:
             return [...state, action.payload]
         case GET_BRAND_RED:
-            return action.payload
-
+            return action.payload.data
         case UPDATE_BRAND_RED:
-            let index = state.findIndex(x => x.id === action.payload.id);
-            state[index].name = action.payload.name
-            state[index].pic = action.payload.pic
-            state[index].active = action.payload.active
-            return state
+            return state.map((x) =>
+                x._id === action.payload._id ? { ...x, ...action.payload } : x
+            );
 
         case DELETE_BRAND_RED:
-            return state.filter(x => x.id !== action.payload.id)
+            return state.filter(x => x._id !== action.payload._id)
 
         default:
             return state

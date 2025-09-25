@@ -25,8 +25,8 @@ export default function Adminmaincategorycreate() {
 
   function getinputdata(e) {
     var name = e.target.name
-    var value = e.target.files && e.target.files.length ? "maincategory/" + e.target.files[0].name : e.target.value
-    // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
+    // var value = e.target.files && e.target.files.length ? "maincategory/" + e.target.files[0].name : e.target.value
+    var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
     seterrormassege((old) => {
       return {
         ...old,
@@ -41,7 +41,7 @@ export default function Adminmaincategorycreate() {
       }
     })
   }
- function postinputdata(e) {
+  function postinputdata(e) {
     e.preventDefault()
     let error = Object.values(errormassege).find(x => x !== "")
     if (error) {
@@ -59,22 +59,18 @@ export default function Adminmaincategorycreate() {
         })
         return
       }
-      dispach(Createmaincategory({...data}))
 
-      // for real backend
-      
-    //   let fromdata=new FormData()
-    // fromdata.append("name",data.name);
-    // fromdata.append("pic",data.pic);
-    // fromdata.append("active",data.active)
-    // dispach(Createmaincategory(fromdata))
+      const Fromdata = new FormData()
+      Object.keys(data).forEach((key) => {
+        Fromdata.append(key, data[key]);
+      })
+      dispach(Createmaincategory(Fromdata))
       navigate("/admin/maincategory");
     }
   }
   useEffect(() => {
     dispach(getmaincategory())
-    
-  })
+  }, [])
 
   return (
     <>

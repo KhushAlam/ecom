@@ -8,6 +8,9 @@ import Testomonial from "../Components/Testomonial";
 import Products from "../Components/Products";
 import CategorySlider from "../Components/CategorySlider";
 import { Link } from "react-router-dom";
+import banner2 from "../banners/banner2.jpg"
+import banner3 from "../banners/banner3.jpg"
+import banner4 from "../banners/banner2.jpg"
 // import Breadcrum from "../Components/Breadcrum";
 
 import { getmaincategory } from "./../Redux/ActionCreator/MainctegoryActionCreator"
@@ -24,15 +27,15 @@ export default function Homepage() {
 
   useEffect(() => {
     dispatch(getmaincategory())
-  }, [maincategorystatedata.length])
+  }, [maincategorystatedata])
 
   useEffect(() => {
     dispatch(getsubcategory())
-  }, [subcategorystatedata.length])
+  }, [subcategorystatedata])
 
   useEffect(() => {
     dispatch(getproduct())
-  }, [productstatedata.length])
+  }, [productstatedata])
 
   return (
     <>
@@ -87,7 +90,7 @@ export default function Homepage() {
                     data-aos="zoom-out"
                   >
                     <img
-                      src="%PUBLIC_URL%/assets/img/banners/banner1.jpg"
+                      src={banner4}
                       className="img-fluid animated"
                       alt=""
                     />
@@ -123,7 +126,7 @@ export default function Homepage() {
                     data-aos="zoom-out"
                   >
                     <img
-                      src="%PUBLIC_URL%/assets/img/banners/banner2.jpg"
+                      src={banner2}
                       className="img-fluid animated"
                       alt=""
                     />
@@ -159,7 +162,7 @@ export default function Homepage() {
                     data-aos="zoom-out"
                   >
                     <img
-                      src="/assets/img/banners/banner3.jpg"
+                      src={banner3}
                       className="img-fluid animated"
                       alt=""
                     />

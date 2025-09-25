@@ -79,7 +79,7 @@ export default function CategorySlider({ tittle }) {
             {data.map((item) => {
               return <SwiperSlide key={item.id}>
                 <Link to={`/shop?${tittle === "maincategory" ? "mc" : (tittle === 'subcategory' ? "sc" : "br")}=${item.name}`}><img
-                  src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`}
+                  src={`${item.pic}`}
                   className="img-fluid"
                   alt=""
                   style={tittle === 'brand' ? { height: 100 } : { height: 300 }}

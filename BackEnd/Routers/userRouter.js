@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudnary from "../Database/cloudnary.js";
+import cloudnary from "../Database/cloudinary.js";
 import User from "../Models/userSchema.js";
 
 const userRouter = express.Router();

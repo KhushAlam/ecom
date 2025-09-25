@@ -51,7 +51,7 @@ export default function AdmincreateProduct() {
 
   function getinputdata(e) {
     var name = e.target.name
-    var value = e.target.files && e.target.files.length ? Array.from(e.target.files).map(x => "product/" + x.name) : e.target.value //For multipal files
+    var value = e.target.files && e.target.files.length ? Array.from(e.target.files).map(x => x) : e.target.value //For multipal files
     // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
     seterrormassege((old) => {
       return {

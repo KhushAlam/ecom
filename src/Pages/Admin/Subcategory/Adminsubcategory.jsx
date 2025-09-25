@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrum from "../../../Components/Breadcrum";
 import Sidebar from "../Sidebar";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Adminsubcategory() {
   let dispach = useDispatch()
   let subcategorystatedata = useSelector(state => state.subcategorystatedata)
+  let [data, setdata] = useState([])
 
 
   async function deleteitem(id) {
@@ -23,17 +24,20 @@ export default function Adminsubcategory() {
     dispach(getsubcategory())
 
     if (subcategorystatedata.length) {
+      setdata(subcategorystatedata)
       let time = setTimeout(() => {
         $('#myTable').DataTable()
       }, 300)
       return time
+    } else {
+      setdata([])
     }
 
   }
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [subcategorystatedata.length])
+  }, [subcategorystatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -45,7 +49,7 @@ export default function Adminsubcategory() {
           <div className="col-md-9">
             <h5 className="text-center p-2 bg-primary w-100 text-light">
               Subcategory
-              <Link to="/admin/subcategory/create" className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>
+              <Link to="/admin/subcategory/create" className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>
                 <i className="fa fa-plus text-light float-end"></i>
               </Link>
             </h5>
@@ -58,20 +62,20 @@ export default function Adminsubcategory() {
                     <th>Pic</th>
                     <th>Active</th>
                     <th>Edit</th>
-                    <th className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>Delete</th>
+                    <th className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    subcategorystatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                    data?.map((item) => {
+                      return <tr key={item._id}>
+                        <td>{item._id?.slice(0, 4)}</td>
                         <td>{item.name}</td>
-                        <td><Link to={`${process.env.REACT_APP_SITE_SUBCATEGORY}${item.pic}`} target="_blank">
-                          <img src={`${process.env.REACT_APP_SITE_SUBCATEGORY}${item.pic}`} height={60} width={60} /></Link></td>
+                        <td><Link to={`${item.pic}`} target="_blank">
+                          <img src={`${item.pic}`} height={60} width={60} /></Link></td>
                         <td>{item.active ? "Yes" : "No"}</td>
-                        <td> <Link to={`/admin/subcategory/update/${item.id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                        <td> <Link to={`/admin/subcategory/update/${item._id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
+                        <td className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

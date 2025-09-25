@@ -1,13 +1,13 @@
 import express from "express"
 import multer from "multer"
 import { CloudinaryStorage } from "multer-storage-cloudinary"
-import cloudnary from "../Database/cloudnary.js";
+import cloudinary from "../Database/cloudinary.js";
 import BrandModel from "../Models/brandSchema.js";
 const brandRouter = express.Router()
 
 
 const storage = new CloudinaryStorage({
-    cloudinary: cloudnary,
+    cloudinary: cloudinary,
     params: {
         folder: "Maincatogory",
         allowed_formats: ["jpg", "png", "jpeg"],

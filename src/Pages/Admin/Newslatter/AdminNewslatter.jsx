@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrum from "../../../Components/Breadcrum";
 import Sidebar from "../Sidebar";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Adminnewslatter() {
   let dispach = useDispatch()
   let newslatterstatedata = useSelector(state => state.newslatterstatedata)
+  let [data, setdata] = useState([]);
 
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
@@ -20,7 +21,7 @@ export default function Adminnewslatter() {
   }
   async function updateactive(id) {
     if (window.confirm("Are you sure to update active status")) {
-      let item = newslatterstatedata.find(x => x.id === id)
+      let item = newslatterstatedata.find(x => x._id === id)
       dispach(updateNewslatter({ ...item, active: !item.active }))
       getapidata();
     }
@@ -29,17 +30,20 @@ export default function Adminnewslatter() {
     dispach(getNewslatter())
 
     if (newslatterstatedata.length) {
+      setdata(newslatterstatedata)
       let time = setTimeout(() => {
         $('#myTable').DataTable()
       }, 300)
       return time
+    } else {
+      setdata([])
     }
 
   }
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [newslatterstatedata.length])
+  }, [newslatterstatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -59,18 +63,17 @@ export default function Adminnewslatter() {
                     <th>ID</th>
                     <th>Email</th>
                     <th>Active</th>
-                    <th className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    newslatterstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                    data.map((item) => {
+                      return <tr key={item._id}>
+                        <td>{item._id?.slice(0,4)}</td>
                         <td>{item.email}</td>
-                        <td onClick={() => { updateactive(item.id) }} style={{cursor:"pointer"}}>{item.active ? "Yes" : "No"}</td>
+                        <td onClick={() => { updateactive(item._id) }} style={{ cursor: "pointer" }}>{item.active ? "Yes" : "No"}</td>
                         <td
-                        className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                          className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import Homepage from "./Pages/Homepage";
@@ -52,7 +52,7 @@ import Forgetpassword from "./Components/Forgetpassword";
 export default function App() {
   return (
     <>
-      <HashRouter>
+      <BrowserRouter>
         <Navbar />
         <Routes>
           <Route path='/' element={<Homepage />} />
@@ -75,9 +75,9 @@ export default function App() {
             <Route path="/order-confirmation" element={<OrderConfirmation />} /></> : null}
 
           {/* Admin routes */}
-          {localStorage.getItem("login") && (localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Super Admin")
-            ?
-            <>
+          {/* {localStorage.getItem("login") && (localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Super Admin") */}
+            {/* ? */}
+            {/* <> */}
               <Route path="/admin" element={<Adminhome />} />
               <Route path="/admin/maincategory" element={<Adminmaincategory />} />
               <Route path="/admin/maincategory/create" element={<Adminmaincategorycreate />} />
@@ -110,13 +110,14 @@ export default function App() {
 
               <Route path="/admin/user" element={<Adminusers />} />
               <Route path="/admin/user/create" element={<Admincreateusers />} />
-              <Route path="/admin/user/update/:id" element={<Adminupdateusers />} /></> : null}
+              <Route path="/admin/user/update/:id" element={<Adminupdateusers />} />
+              {/* </> : null} */}
 
           <Route path="/*" element={<ErrorPage />} />
 
         </Routes>
         <Footer />
-      </HashRouter>
+      </BrowserRouter>
     </>
   );
 }

@@ -115,6 +115,7 @@ export default function Navbar() {
               <li>
                 <NavLink to="/testomonial">Testonomial</NavLink>
               </li>
+              <li><NavLink to="/admin">Admin</NavLink></li>
               <li>
                 <NavLink to="/contractus">Contact Us</NavLink>
               </li>

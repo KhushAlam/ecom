@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrum from "../../../Components/Breadcrum";
 import Sidebar from "../Sidebar";
 import { Link } from "react-router-dom";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Adminproduct() {
   let dispach = useDispatch()
   let productstatedata = useSelector(state => state.productstatedata)
+  let [data, setdata] = useState([]);
+
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
       dispach(deleteproduct({ id: id }))
@@ -21,17 +23,20 @@ export default function Adminproduct() {
     dispach(getproduct())
 
     if (productstatedata.length) {
+      setdata(productstatedata);
       let time = setTimeout(() => {
         $('#myTable').DataTable()
       }, 300)
       return time
+    } else {
+      setdata([]);
     }
 
   }
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [productstatedata.length])
+  }, [productstatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -43,7 +48,7 @@ export default function Adminproduct() {
           <div className="col-md-9">
             <h5 className="text-center p-2 bg-primary w-100 text-light">
               Product
-              <Link to="/admin/product/create" className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>
+              <Link to="/admin/product/create" className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>
                 <i className="fa fa-plus text-light float-end"></i>
               </Link>
             </h5>
@@ -66,14 +71,14 @@ export default function Adminproduct() {
                     <th>Pic</th>
                     <th>Active</th>
                     <th>Edit</th>
-                    <th className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>Delete</th>
+                    <th className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
                     productstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                      return <tr key={item._id}>
+                        <td>{item._id}</td>
                         <td>{item.name}</td>
                         <td>{item.maincategory}</td>
                         <td>{item.subcategory}</td>
@@ -83,21 +88,21 @@ export default function Adminproduct() {
                         <td>{item.basePrice}</td>
                         <td>{item.disCount}</td>
                         <td>{item.finalPrice}</td>
-                        <td>{item.stock?"Yes":"No"}</td>
+                        <td>{item.stock ? "Yes" : "No"}</td>
                         <td>{item.stockQuantity}</td>
                         <td><div className="testimonial-message">
                           {
-                           item.pic.map((pic,index)=>{
-                            return <Link to={`${process.env.REACT_APP_SITE_MAINCATEGORY}${pic}`} target="_blank">
-                              <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${pic}`} height={80} width={70} className="me-2"/></Link>
-                           })  
+                            item.pic.map((pic, index) => {
+                              return <Link to={`${pic}`} target="_blank">
+                                <img src={`${pic}`} height={80} width={70} className="me-2" /></Link>
+                            })
                           }
-                      
+
                         </div>
                         </td>
                         <td>{item.active ? "Yes" : "No"}</td>
-                        <td> <Link to={`/admin/product/update/${item.id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                        <td> <Link to={`/admin/product/update/${item._id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
+                        <td className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

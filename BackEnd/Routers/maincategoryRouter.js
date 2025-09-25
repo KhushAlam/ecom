@@ -1,7 +1,7 @@
 import express from "express"
 import multer from "multer"
 import { CloudinaryStorage } from "multer-storage-cloudinary"
-import cloudnary from "../Database/cloudnary.js";
+import cloudnary from "../Database/cloudinary.js";
 import Maincategorymodel from "../Models/maincategorySchema.js"
 
 const maincategoryRouter = express.Router()
@@ -68,19 +68,20 @@ maincategoryRouter.put("/update/:id", upload.single("pic"), async (req, res) => 
             return res.status(404).json({ message: "Data not Found" });
         }
 
-        const { name, active } = req.body;
-        const updatedName = name ? name : existdata.name;
-        const updatedActive = active ? active : existdata.active;
-        const updatedPic = req.file ? req.file.path : existdata.pic;
+        let { name, active } = req.body;
+        name = name ? name : existdata.name;
+        active = active ? active : existdata.active;
+       let pic = req.file ? req.file.path : existdata.pic;
 
         const updatedData = await Maincategorymodel.findByIdAndUpdate(
             id,
-            { name: updatedName, active: updatedActive, pic: updatedPic },
+            { name, active, pic },
             { new: true, runValidators: true }
         );
 
         return res.status(200).json({ message: "Data updated successfully", data: updatedData });
     } catch (err) {
+        console.log(err.message);
         return res.status(500).json({ message: err.message });
     }
 });

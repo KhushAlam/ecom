@@ -32,7 +32,7 @@ export default function Adminhome() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [maincategorystatedata.length])
+  }, [maincategorystatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -63,14 +63,14 @@ export default function Adminhome() {
                 <tbody>
                   {
                     maincategorystatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                      return <tr key={item._id}>
+                        <td>{item._id?.slice(0,4)}</td>
                         <td>{item.name}</td>
-                        <td><Link to={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} target="_blank">
-                          <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} height={60} width={60} /></Link></td>
+                        <td><Link to={`${item.pic}`} target="_blank">
+                          <img src={`${item.pic}`} height={60} width={60} /></Link></td>
                         <td>{item.active ? "Yes" : "No"}</td>
-                        <td> <Link to={`/admin/maincategory/update/${item.id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                        <td> <Link to={`/admin/maincategory/update/${item._id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
+                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

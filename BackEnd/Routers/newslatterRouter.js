@@ -1,14 +1,14 @@
 import express from "express";
 import NewslatterModel from "../Models/newslatterSchema.js";
 import multer from "multer";
-import cloudnary from "../Database/cloudnary.js";
+import cloudnary from "../Database/cloudinary.js";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const newslatterRouter = express.Router();
 
 //file handling using multer and cloudinary
 
-const storage = CloudinaryStorage({
+const storage = new CloudinaryStorage({
     cloudinary: cloudnary,
     params: {
         folder: "Newslatter",
@@ -21,7 +21,7 @@ const upload = multer({
     limits: { fileSize: 1 * 1024 * 1024 }
 })
 
-testimonalRouter.get("/get", async (req, res) => {
+newslatterRouter.get("/get", async (req, res) => {
     try {
         const data = await NewslatterModel.find()
         if (!data) {
@@ -34,7 +34,7 @@ testimonalRouter.get("/get", async (req, res) => {
     }
 })
 
-testimonalRouter.post("/create", upload.any(), async (req, res) => {
+newslatterRouter.post("/create", upload.any(), async (req, res) => {
     try {
         const { email, message, active } = req.body
 
@@ -56,7 +56,7 @@ testimonalRouter.post("/create", upload.any(), async (req, res) => {
     }
 })
 
-testimonalRouter.put("/update", upload.any(), async (req, res) => {
+newslatterRouter.put("/update/:id", upload.any(), async (req, res) => {
     try {
         const { id } = req.params;
         const existdata = await NewslatterModel.findById(id);
@@ -65,14 +65,14 @@ testimonalRouter.put("/update", upload.any(), async (req, res) => {
             return res.status(404).json({ message: "Data not Found" });
         }
 
-        const { name, active, message } = req.body;
-        const updatedName = name ? name : existdata.name;
-        const updatedmessage = message ? message : existdata.message
-        const updatedActive = active ? active : existdata.active;
+        let { name, active, message } = req.body;
+        name = name ? name : existdata.name;
+        message = message ? message : existdata.message
+        active = active ? active : existdata.active;
 
         const updatedData = await NewslatterModel.findByIdAndUpdate(
             id,
-            { name: updatedName, active: updatedActive, message: updatedmessage },
+            { name: name, active: active, message: message },
             { new: true, runValidators: true }
         );
 
@@ -81,7 +81,7 @@ testimonalRouter.put("/update", upload.any(), async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 })
-testimonalRouter.delete("/delete", async (req, res) => {
+newslatterRouter.delete("/delete/:id", async (req, res) => {
     try {
         let { id } = req.params
         let deleted = await NewslatterModel.findByIdAndDelete(id)
