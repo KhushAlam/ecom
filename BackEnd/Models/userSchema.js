@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    mobile: {
+    phone: {
         type: String,
         required: [true, "Mobile number is required"],
         match: [/^\d{10}$/, "Mobile number must be 10 digits"]
@@ -35,6 +35,11 @@ const userSchema = new mongoose.Schema({
         match: [/.+@.+\..+/, "Please enter a valid email address"]
     },
     password: {
+        type: String,
+        required: [true, "Password is required"],
+        minlength: [6, "Password must be at least 6 characters"]
+    },
+    cpassword: {
         type: String,
         required: [true, "Password is required"],
         minlength: [6, "Password must be at least 6 characters"]

@@ -38,7 +38,7 @@ export default function Admincheckout() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [checkoutstatedata.length])
+  }, [checkoutstatedata])
 
   return (
     <>
@@ -68,9 +68,9 @@ export default function Admincheckout() {
                 </thead>
                 <tbody>
                   {
-                    checkoutstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                    checkoutstatedata?.map((item) => {
+                      return <tr key={item._id}>
+                        <td>{item._id}</td>
                         <td>{item.user}</td>
                         <td>{item.OrderStatus}</td>
                         <td>{item.PaymentMode}</td>

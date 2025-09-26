@@ -20,7 +20,7 @@ export default function Admincontactus() {
   }
   async function updateactive(id) {
     if (window.confirm("Are you sure to update active status")) {
-      let item = contractusstatedata.find(x => x.id === id)
+      let item = contractusstatedata.find(x => x._id === id)
       dispach(updatecontractus({ ...item, active: !item.active }))
       getapidata();
     }
@@ -38,7 +38,7 @@ export default function Admincontactus() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [contractusstatedata.length])
+  }, [contractusstatedata])
 
   return (
     <>
@@ -66,16 +66,16 @@ export default function Admincontactus() {
                 </thead>
                 <tbody>
                   {
-                    contractusstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                    contractusstatedata?.map((item) => {
+                      return <tr key={item._id}>
+                        <td>{item._id}</td>
                         <td>{item.name}</td>
                         <td>{item.email}</td>
                         <td>{item.phone}</td>
                         <td>{new Date(item.date).toLocaleString()}</td>
                         <td onClick={() => { updateactive(item.id) }} style={{ cursor: "pointer" }}>{item.active ? "Yes" : "No"}</td>
-                        <td><Link to={`${item.id}`}><button className="btn btn-primary"><i className="fa fa-eye"></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>{!item.active ? <><button className={`btn btn-danger`} onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></> : null}</td>
+                        <td><Link to={`${item._id}`}><button className="btn btn-primary"><i className="fa fa-eye"></i></button></Link></td>
+                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>{!item.active ? <><button className={`btn btn-danger`} onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></> : null}</td>
                       </tr>
                     })
                   }

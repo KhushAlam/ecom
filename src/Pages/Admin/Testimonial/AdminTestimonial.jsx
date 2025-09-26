@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrum from "../../../Components/Breadcrum";
 import Sidebar from "../Sidebar";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function AdminTestimonial() {
   let dispach = useDispatch()
   let testimonialstatedata = useSelector(state => state.testimonialstatedata)
+  let [data,setdata]=useState([])
 
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
@@ -22,17 +23,20 @@ export default function AdminTestimonial() {
     dispach(gettestimonial())
 
     if (testimonialstatedata.length) {
+      setdata(testimonialstatedata);
       let time = setTimeout(() => {
         $('#myTable').DataTable()
       }, 300)
       return time
+    }else{
+      setdata([])
     }
 
   }
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [testimonialstatedata.length])
+  }, [testimonialstatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -63,14 +67,14 @@ export default function AdminTestimonial() {
                 <tbody>
                   {
                     testimonialstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                      return <tr key={item._id}>
+                        <td>{item._id?.slice(0,4)}</td>
                         <td>{item.name}</td>
-                        <td><Link to={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} target="_blank">
-                          <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} height={80} width={60} /></Link></td>
+                        <td><Link to={`${item.pic}`} target="_blank">
+                          <img src={`${item.pic}`} height={80} width={60} /></Link></td>
                         <td><div className="testimonial-message">{item.message}</div></td>
-                        <td> <Link to={`/admin/testimonial/update/${item.id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                        <td> <Link to={`/admin/testimonial/update/${item._id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link></td>
+                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

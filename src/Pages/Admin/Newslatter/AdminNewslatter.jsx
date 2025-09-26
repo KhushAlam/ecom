@@ -15,21 +15,32 @@ export default function Adminnewslatter() {
 
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
-      dispach(deleteNewslatter({ id: id }))
+      let item = newslatterstatedata.find(x => x._id === id);
+      const Fromdata = new FormData()
+      Object.keys(item).forEach(key =>
+        Fromdata.append(key, item[key])
+      )
+      dispach(deleteNewslatter(Fromdata))
       getapidata();
     }
   }
   async function updateactive(id) {
     if (window.confirm("Are you sure to update active status")) {
       let item = newslatterstatedata.find(x => x._id === id)
-      dispach(updateNewslatter({ ...item, active: !item.active }))
+      item.active = !item.active
+      const Fromdata = new FormData()
+      Object.keys(item).forEach(key => {
+        Fromdata.append(key, item[key])
+      })
+      dispach(updateNewslatter(Fromdata))
       getapidata();
     }
   }
+
   function getapidata() {
     dispach(getNewslatter())
 
-    if (newslatterstatedata.length) {
+    if (newslatterstatedata?.length) {
       setdata(newslatterstatedata)
       let time = setTimeout(() => {
         $('#myTable').DataTable()
@@ -63,13 +74,14 @@ export default function Adminnewslatter() {
                     <th>ID</th>
                     <th>Email</th>
                     <th>Active</th>
+                    <th>Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
                     data.map((item) => {
                       return <tr key={item._id}>
-                        <td>{item._id?.slice(0,4)}</td>
+                        <td>{item._id?.slice(0, 4)}</td>
                         <td>{item.email}</td>
                         <td onClick={() => { updateactive(item._id) }} style={{ cursor: "pointer" }}>{item.active ? "Yes" : "No"}</td>
                         <td

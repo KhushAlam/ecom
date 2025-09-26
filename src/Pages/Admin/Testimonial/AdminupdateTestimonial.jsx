@@ -18,20 +18,20 @@ export default function AdminupdateTestimonial() {
     let [data, setdata] = useState({
         name: "",
         pic: "",
-        message:"",
+        message: "",
         active: true
     })
     let [errormassege, seterrormassege] = useState({
         name: "",
         pic: "",
-        message:""
+        message: ""
     })
 
     let [show, setshow] = useState(false);
 
     function getinputdata(e) {
         var name = e.target.name
-        var value = e.target.files && e.target.files.length ? "testimonial/" + e.target.files[0].name : e.target.value
+        var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
 
         seterrormassege((old) => {
             return {
@@ -54,7 +54,7 @@ export default function AdminupdateTestimonial() {
             setshow(true)
         }
         else {
-            let item = testimonialstatedata.find(x => x.id !== id && x.name.toLowerCase() === data.name.toLowerCase())
+            let item = testimonialstatedata.find(x => x._id !== id && x.name.toLowerCase() === data.name.toLowerCase())
             if (item) {
                 setshow(true)
                 seterrormassege((old) => {
@@ -65,16 +65,20 @@ export default function AdminupdateTestimonial() {
                 })
                 return
             }
-            dispach(updatetestimonial({ ...data }))
+            const Fromdata = new FormData()
+            Object.keys(data).forEach(key => {
+                Fromdata.append(key, data[key])
+            })
+            dispach(updatetestimonial(Fromdata))
             navigate("/admin/testimonial");
         }
     }
     useEffect(() => {
         dispach(gettestimonial())
-        if (testimonialstatedata.length) {
-            setdata(testimonialstatedata.find(x => x.id === id))
+        if (testimonialstatedata?.length) {
+            setdata(testimonialstatedata?.find(x => x._id === id))
         }
-    }, [testimonialstatedata.length])
+    }, [])
     return (
         <>
             <Breadcrum title="Admin" />

@@ -16,8 +16,8 @@ const contactusSchema = mongoose.Schema({
         ],
     },
     phone: {
-        type: Boolean,
-        default: true,
+        type: Number,
+        required:true,
     },
     subject: {
         type: String,

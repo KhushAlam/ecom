@@ -14,6 +14,7 @@ export default function Admincreateusers() {
   let [data, setdata] = useState({
     name: "",
     username: "",
+    pic:"",
     phone: "",
     email: "",
     password: "",
@@ -35,8 +36,9 @@ export default function Admincreateusers() {
   let [show, setshow] = useState(false);
 
   function getinputdata(e) {
-    var { name, value } = e.target
-    // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
+    var name = e.target.name
+    var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value 
+
     seterrormassege((old) => {
       return {
         ...old,
@@ -53,7 +55,6 @@ export default function Admincreateusers() {
   }
   function postinputdata(e) {
     e.preventDefault()
-    // console.log("object")
     if (data.password === data.cpassword) {
       let error = Object.values(errormassege).find(x => x !== "")
       if (error) {
@@ -72,15 +73,14 @@ export default function Admincreateusers() {
           })
           return
         }
-        dispach(Createusers({ ...data }))
 
-        // for real backend
+        const Fromdata = new FormData()
+        Object.keys(data).forEach(key=>
+          Fromdata.append(key,data[key])
+        )
 
-        //   let fromdata=new FormData()
-        // fromdata.append("name",data.name);
-        // fromdata.append("pic",data.pic);
-        // fromdata.append("active",data.active)
-        // dispach(Createbrand(fromdata))
+        dispach(Createusers(Fromdata))
+
         navigate("/admin/user")
       }
     }
@@ -95,6 +95,8 @@ export default function Admincreateusers() {
       })
     }
   }
+
+
   useEffect(() => {
     dispach(getusers())
   }, [])

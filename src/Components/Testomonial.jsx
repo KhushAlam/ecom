@@ -76,7 +76,7 @@ export default function Testomonial() {
                   <p className="slider-message">{item.message}</p>
                   <div className="profile mt-auto">
                     <img
-                      src={`${process.env.REACT_APP_SITE_SUBCATEGORY}${item.pic}`}
+                      src={`${item.pic}`}
                       className="testimonial-img"
                       alt=""
                     />

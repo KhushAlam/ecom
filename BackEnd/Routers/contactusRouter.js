@@ -27,7 +27,7 @@ contactusRouter.get("/get", async (req, res) => {
         if (data) {
             return res.status(200).json({ data: data, message: 'data Found' })
         } else {
-            return res.status(400).json({ message: "No any Data" })
+            return res.status(400).json({data:[], message: "No any Data" })
         }
     } catch (err) {
         res.status(500).json({ message: err.message })

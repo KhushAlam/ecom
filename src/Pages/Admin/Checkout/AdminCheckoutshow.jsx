@@ -41,7 +41,7 @@ export default function Admincheckoutshow() {
   async function getapidata() {
     dispach(getcheckout())
     if (checkoutstatedata.length) {
-      let item = checkoutstatedata.find(x => x.id === id)
+      let item = checkoutstatedata.find(x => x._id === id)
       if (item) {
         setdata(item)
         setorderStatus(item.OrderStatus);
@@ -64,7 +64,7 @@ export default function Admincheckoutshow() {
   }
   useEffect(() => {
     getapidata()
-  }, [checkoutstatedata.length])
+  }, [checkoutstatedata])
 
   return (
     <>
@@ -83,7 +83,7 @@ export default function Admincheckoutshow() {
                 <tbody>
                   <tr>
                     <th>Id</th>
-                    <td>{data.id}</td>
+                    <td>{data._id}</td>
                   </tr>
                   <tr>
                     <th>User</th>

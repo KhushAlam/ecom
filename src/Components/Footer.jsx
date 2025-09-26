@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function Footer() {
   let [email, setemail] = useState("");
   let [message, setmessage] = useState("");
+  let [active, setactive] = useState(true);
 
   let newslatterstatedata = useSelector(state => state.newslatterstatedata);
   let dispatch = useDispatch()
@@ -19,21 +20,20 @@ export default function Footer() {
     else {
       const Fromdata = new FormData();
       Fromdata.append("email", email);
-      Fromdata.append("message", message);
+      Fromdata.append("active", active)
 
       dispatch(CreateNewslatter(Fromdata));
       setmessage("Thanks For Subscribe Our NewsLatter Service Now We Can Send Email Regarding New Products or Offer's")
-      // setmessage("")
     }
 
   }
 
 
-  // useEffect(() => {
-  //   (() => {
-  //     dispatch(getNewslatter())
-  //   })()
-  // }, [newslatterstatedata.length])
+  useEffect(() => {
+    (() => {
+      dispatch(getNewslatter())
+    })()
+  }, [newslatterstatedata])
 
   return (
     <>

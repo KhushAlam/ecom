@@ -28,8 +28,8 @@ export default function AdmincreaTetestimonial() {
 
   function getinputdata(e) {
     var name = e.target.name
-    var value = e.target.files && e.target.files.length ? "testimonial/" + e.target.files[0].name : e.target.value
-    // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
+    // var value = e.target.files && e.target.files.length ? "testimonial/" + e.target.files[0].name : e.target.value
+    var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
     seterrormassege((old) => {
       return {
         ...old,
@@ -62,22 +62,20 @@ export default function AdmincreaTetestimonial() {
         })
         return
       }
-      dispach(Createtestimonial({ ...data }))
 
-      // for real backend
+      const Fromdata = new FormData()
+      Object.keys(data).map(key => {
+        Fromdata.append(key, data[key]);
+      })
+      dispach(Createtestimonial(Fromdata))
 
-      //   let fromdata=new FormData()
-      // fromdata.append("name",data.name);
-      // fromdata.append("pic",data.pic);
-      // fromdata.append("active",data.active)
-      // dispach(Createtestimonial(fromdata))
       navigate("/admin/testimonial");
     }
   }
+
   useEffect(() => {
     dispach(gettestimonial())
-
-  })
+  },[])
 
   return (
     <>
@@ -102,8 +100,8 @@ export default function AdmincreaTetestimonial() {
               </div>
               <div className="mb-3">
                 <label>Message*</label>
-                <textarea name="message" onChange={getinputdata} className={`form-control border-3 ${show && errormassege.message?'border-danger':'border-primary'}`} placeholder="Message..."></textarea>
-                {show&& errormassege.message?<p className="text-danger">{errormassege.message}</p>:null}
+                <textarea name="message" onChange={getinputdata} className={`form-control border-3 ${show && errormassege.message ? 'border-danger' : 'border-primary'}`} placeholder="Message..."></textarea>
+                {show && errormassege.message ? <p className="text-danger">{errormassege.message}</p> : null}
               </div>
               <div className="row">
                 <div className="col-md-6 mb-3">

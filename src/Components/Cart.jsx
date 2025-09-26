@@ -29,13 +29,30 @@ export default function Cart({ title, data }) {
             date: new Date(),
             product: [...cartdata]
         }
-        dispatch(Createcheckout(item))
+
+        const Fromdata = new FormData()
+        Object.keys(item).forEach(key =>
+            Fromdata.append(key, item[key])
+        )
+
+        dispatch(Createcheckout(Fromdata))
         cartdata.forEach(cartItem => {
-            let product = productstatedata.find(x => x.id === cartItem.product)
+            let product = productstatedata.find(x => x._id === cartItem.product)
             product.stockQuantity = product.stockQuantity - cartItem.quentity
             product.stock = product.stockQuantity === 0 ? false : true
-            dispatch(updateproduct({ ...product }))
-            dispatch(deletecart({ id: cartItem.id }))
+
+            const Fromdata = new FormData()
+            Object.keys(product).forEach(key =>
+                Fromdata.append(key, data[key])
+            )
+            dispatch(updateproduct(Fromdata))
+            // dispatch(deletecart({ id: cartItem._id }))
+            const deletecartItem = new FormData()
+            Object.keys(cartItem).forEach(key =>
+                deletecartItem.append(key, cartItem[key])
+            )
+            dispatch(deletecart(deletecartItem))
+
         })
         navigate("/order-confirmation");
 
@@ -49,8 +66,8 @@ export default function Cart({ title, data }) {
 
 
     function updaterecord(id, option) {
-        let item = cartdata.find(x => x.id === id)
-        let index = cartdata.findIndex(x => x.id === id)
+        let item = cartdata.find(x => x._id === id)
+        let index = cartdata.findIndex(x => x._id === id)
         if ((option === "DEC" && item.quentity === 1) || (option === "INC" && item.quentity === item.stockQuantity)) {
 
         } else if (option === "DEC") {

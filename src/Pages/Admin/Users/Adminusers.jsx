@@ -32,7 +32,7 @@ export default function Adminusers() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [userstatedata.length])
+  }, [userstatedata])
   return (
     <>
       <Breadcrum title="Admin" />
@@ -66,16 +66,16 @@ export default function Adminusers() {
                 <tbody>
                   {
                     userstatedata.map((item) => {
-                      return <tr key={item.id}>
-                        <td>{item.id}</td>
+                      return <tr key={item._id}>
+                        <td>{item._id?.slice(0,4)}</td>
                         <td>{item.name}</td>
                         <td>{item.username}</td>
                         <td>{item.phone}</td>
                         <td>{item.email}</td>
                         <td>{item.role}</td>
                         <td>{item.active ? "Yes" : "No"}</td>
-                        <td> {item.role !== "Buyer" ? <Link to={`/admin/user/update/${item.id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link> : null}</td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item.id) }}><i className="fa fa-trash "></i></button></td>
+                        <td> {item.role !== "Buyer" ? <Link to={`/admin/user/update/${item._id}`}><button className="btn btn-primary"><i className="fa fa-edit "></i></button></Link> : null}</td>
+                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}><button className="btn btn-danger" onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></td>
                       </tr>
                     })
                   }

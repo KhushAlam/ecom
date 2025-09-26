@@ -10,11 +10,6 @@ const NewslatterSchema = mongoose.Schema({
         ],
         unique: true
     },
-    message: {
-        type: String,
-        required: true,
-        minlength: [30, "Message Length Must be Atleast 30 Word"]
-    },
     active:{
         type:Boolean,
         default:true

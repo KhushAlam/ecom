@@ -22,7 +22,7 @@ export default function Admincontactus() {
   }
   async function updateactive() {
     if (window.confirm("Are you sure to update active status")) {
-      let item = contractusstatedata.find(x => x.id === id)
+      let item = contractusstatedata.find(x => x._id === id)
       dispach(updatecontractus({ ...item, active: !item.active }))
       getapidata();
     }
@@ -30,7 +30,7 @@ export default function Admincontactus() {
   function getapidata() {
     dispach(getcontractus())
     if (contractusstatedata.length) {
-      let item = contractusstatedata.find(x => x.id === id)
+      let item = contractusstatedata.find(x => x._id === id)
       if (item) {
         setdata(item)
       }
@@ -39,7 +39,7 @@ export default function Admincontactus() {
   }
   useEffect(() => {
     getapidata()
-  }, [contractusstatedata.length])
+  }, [contractusstatedata])
 
   return (
     <>
@@ -58,7 +58,7 @@ export default function Admincontactus() {
                 <tbody>
                   <tr>
                     <th>Id</th>
-                    <td>{data.id}</td>
+                    <td>{data._id?.slice(0,4)}</td>
                   </tr>
                   <tr>
                     <th>Name</th>

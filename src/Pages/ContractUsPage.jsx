@@ -10,7 +10,9 @@ export default function ContractUsPage() {
     email: "",
     subject: "",
     phone: "",
-    message: ""
+    message: "",
+    active: true,
+    date: new Date()
   })
 
   let [error, seterrormassege] = useState({
@@ -48,7 +50,13 @@ export default function ContractUsPage() {
     if (erro) {
       setshow(true)
     } else {
-      dispatch(createcontractus({ ...data, active: true, date: new Date() }))
+
+      const Fromdata = new FormData()
+      Object.keys(data).forEach(key => {
+        Fromdata.append(key, data[key]);
+      })
+      dispatch(createcontractus(Fromdata))
+
       setdata({
         name: "",
         email: "",

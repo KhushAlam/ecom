@@ -27,7 +27,7 @@ newslatterRouter.get("/get", async (req, res) => {
         if (!data) {
             return res.status(404).json({ message: "No Any Data" })
         } else {
-            return res.status.json({ data: data, message: "Data Found" })
+            return res.status(201).json({ data: data, message: "Data Found" })
         }
     } catch (err) {
         return res.status(500).json({ message: err.message })
@@ -36,12 +36,10 @@ newslatterRouter.get("/get", async (req, res) => {
 
 newslatterRouter.post("/create", upload.any(), async (req, res) => {
     try {
-        const { email, message, active } = req.body
-
+        const { email, active } = req.body
 
         const newdata = new NewslatterModel({
             email,
-            message,
             active,
         });
 
@@ -65,14 +63,13 @@ newslatterRouter.put("/update/:id", upload.any(), async (req, res) => {
             return res.status(404).json({ message: "Data not Found" });
         }
 
-        let { name, active, message } = req.body;
+        let { name, active,  } = req.body;
         name = name ? name : existdata.name;
-        message = message ? message : existdata.message
         active = active ? active : existdata.active;
 
         const updatedData = await NewslatterModel.findByIdAndUpdate(
             id,
-            { name: name, active: active, message: message },
+            { name: name, active: active },
             { new: true, runValidators: true }
         );
 
