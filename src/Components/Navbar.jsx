@@ -1,19 +1,35 @@
 import React from "react";
 import Navbarfunction from "./Navbarfunction";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 // import Breadcrum from './Breadcrum'
 export default function Navbar() {
-  let navigate=useNavigate()
-  function logout(){
+  let navigate = useNavigate()
+  async function logout() {
+
+    const token = localStorage.getItem("token");
+    let responce = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/logout`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    })
+    let data = await responce.json()
+    if (!data) return
+
+    toast.sucess(data?.msg, { autoClose: 3000 });
     localStorage.removeItem("name")
     localStorage.removeItem("login")
     localStorage.removeItem("userid")
     localStorage.removeItem("role")
+    localStorage.removeItem("token");
     navigate("/login")
   }
   return (
     <>
-    <Navbarfunction/>
+      <Navbarfunction />
       <div className="topbar bg-primary overflow-hidden w-full">
         <div className="row">
           <div className="col-md-9 col-6">
@@ -120,30 +136,31 @@ export default function Navbar() {
                 <NavLink to="/contractus">Contact Us</NavLink>
               </li>
               {
-        localStorage.getItem("login") ?
-          (
-            <div className="dropdown ms-5">
-              <button className="btn btn-primary border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {localStorage.getItem("name")}
-              </button>
-              <ul className="dropdown-menu">
-                {
-                  localStorage.getItem("role") === "Buyer" ? (
-                    <>
-                      <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
-                      <li><Link className="dropdown-item" to="/cart">Cart</Link></li>
-                      <li><Link className="dropdown-item" to="/checkout">Checkout</Link></li>
-                    </>
-                  ) : (
-                    <li><Link className="dropdown-item" to="/admin">Profile</Link></li>
+                localStorage.getItem("login") ?
+                  (
+                    <div className="dropdown ms-5">
+                      <button className="btn btn-primary border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {localStorage.getItem("name")}
+                      </button>
+                      <ul className="dropdown-menu">
+                        {
+                          localStorage.getItem("role") === "Buyer" ? (
+                            <>
+                              <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
+                              <li><Link className="dropdown-item" to="/cart">Cart</Link></li>
+                              <li><Link className="dropdown-item" to="/checkout">Checkout</Link></li>
+                            </>
+                          ) : (
+                            <li><Link className="dropdown-item" to="/admin">Profile</Link></li>
+                          )
+                        }
+                        <li><button onClick={logout} className="dropdown-item border-0 bg-white">Logout</button>
+                          <ToastContainer /></li>
+                      </ul>
+                    </div>
                   )
-                }
-                <li><button onClick={logout} className="dropdown-item border-0 bg-white">Logout</button></li>
-              </ul>
-            </div>
-          )
-          : <Link to="/login" className="btn-getstarted flex-md-shrink-0">Login</Link>
-      }
+                  : <Link to="/login" className="btn-getstarted flex-md-shrink-0">Login</Link>
+              }
             </ul>
             <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>

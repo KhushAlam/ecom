@@ -21,7 +21,12 @@ export default function Admincontactus() {
   async function updateactive(id) {
     if (window.confirm("Are you sure to update active status")) {
       let item = contractusstatedata.find(x => x._id === id)
-      dispach(updatecontractus({ ...item, active: !item.active }))
+      item.active = !item.active;
+      const Fromdata = new FormData()
+      Object.keys(item).forEach(key =>
+        Fromdata.append(key, item[key])
+      )
+      dispach(updatecontractus(Fromdata))
       getapidata();
     }
   }
@@ -68,14 +73,14 @@ export default function Admincontactus() {
                   {
                     contractusstatedata?.map((item) => {
                       return <tr key={item._id}>
-                        <td>{item._id}</td>
+                        <td>{item._id?.slice(0, 4)}</td>
                         <td>{item.name}</td>
                         <td>{item.email}</td>
                         <td>{item.phone}</td>
                         <td>{new Date(item.date).toLocaleString()}</td>
-                        <td onClick={() => { updateactive(item.id) }} style={{ cursor: "pointer" }}>{item.active ? "Yes" : "No"}</td>
+                        <td onClick={() => { updateactive(item._id) }} style={{ cursor: "pointer" }}>{item.active ? "Yes" : "No"}</td>
                         <td><Link to={`${item._id}`}><button className="btn btn-primary"><i className="fa fa-eye"></i></button></Link></td>
-                        <td className={`${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`}>{!item.active ? <><button className={`btn btn-danger`} onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></> : null}</td>
+                        <td className={`${localStorage.getItem("role") === "Super Admin" ? "" : "d-none"}`}>{!item.active ? <><button className={`btn btn-danger`} onClick={() => { deleteitem(item._id) }}><i className="fa fa-trash "></i></button></> : null}</td>
                       </tr>
                     })
                   }

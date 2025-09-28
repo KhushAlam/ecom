@@ -5,6 +5,7 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudnary from "../Database/cloudinary.js";
 import User from "../Models/userSchema.js";
+import Blacklist from "../Models/Blicklisttoken.js"
 
 const userRouter = express.Router();
 
@@ -21,13 +22,13 @@ const upload = multer({
     limits: { fileSize: 1 * 1024 * 1024 }
 })
 
-userRouter.post("/register", upload.single("pic"), async (req, res) => {
+userRouter.post("/create", upload.single("pic"), async (req, res) => {
     try {
-        let { name, username, email, role, active, password, mobile } = req.body;
+        let { name, username, email, role, active, password, phone, cpassword } = req.body;
         let pic;
 
         if (req.file) {
-            pic = req.file.filename;   // originalname ke jagah filename use karna better hai
+            pic = req.file.path;
         } else {
             return res.status(400).json({ message: "pic is Required" });
         }
@@ -37,13 +38,13 @@ userRouter.post("/register", upload.single("pic"), async (req, res) => {
             return res.status(400).json({ message: "User already exist!" });
         }
 
-        const user = await User.create({ name, username, email, role, active, password, mobile, pic });
+        const user = await User.create({ name, username, email, role, active, password, cpassword, phone, pic });
 
 
         res.status(201).json({ message: "User created successfully" });
 
     } catch (err) {
-        console.error("Register Error:", err); // 👈 error console pe print kar
+        console.error("Register Error:", err);
         return res.status(500).json({ err, message: "Internal Server problem" });
     }
 });
@@ -110,7 +111,7 @@ userRouter.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Invalid password" });
         }
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-        res.json({ token, user, message: "login Sucessfully" });
+        res.json({ data: user, token: token, message: "login Sucessfully" });
 
     } catch (err) {
         return res.status(500).json({ message: "internal server problem" })
@@ -120,7 +121,7 @@ userRouter.post("/login", async (req, res) => {
 userRouter.get("/get", async (req, res) => {
     try {
         const data = await User.find();
-        if (!data) return res.status(404).json({ message: "data not found" })
+        if (!data) return res.status(404).json({ data: [], message: "data not found" })
         else return res.status(200).json({ data: data, message: "data found" });
     } catch (err) {
         return res.status(500).json({ message: "internal server error" });
@@ -132,10 +133,10 @@ userRouter.get("/get/:id", async (req, res) => {
         const id = req.params.id;
         const data = await User.findOne({ _id: id });
         if (data.pic) {
-            data.pic = `http://localhost:8090/users/${data.pic}`
+            data.pic = `${data.pic}`
         }
         if (!data) return res.status(404).json({ message: "data not found" })
-        else return res.status(200).json({ data: data, message: "data found" });
+        else return res.status(200).json({ data: data, message: "User Data Found Sucessfully" });
     } catch (err) {
         return res.status(500).json({ message: "internal server error" });
     }
@@ -150,7 +151,7 @@ userRouter.put("/update/:id", upload.single("pic"), async (req, res) => {
             return res.status(404).json({ message: "User Not Found" });
         }
         if (req.file) {
-            updateddata.pic = req.file.filename
+            updateddata.pic = req.file.path
         } else {
             updateddata.pic = existdata.pic
         }
@@ -162,7 +163,7 @@ userRouter.put("/update/:id", upload.single("pic"), async (req, res) => {
         updateddata.active = updateddata.active ? updateddata.active : existdata.active
         updateddata.password = updateddata.password ? updateddata.password : existdata.password
         updateddata.address = updateddata.address ? updateddata.address : existdata.address
-        updateddata.mobile = updateddata.mobile ? updateddata.mobile : existdata.mobile
+        updateddata.phone = updateddata.phone ? updateddata.phone : existdata.phone
 
         const update = await User.findByIdAndUpdate(id, updateddata, {
             new: true,

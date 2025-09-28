@@ -6,6 +6,7 @@ import Formvalidator from "../../../Validator/Formvalidator";
 // import Filesvalidator from "../../../Validator/Filesvalidator";
 import { getusers, Createusers } from "../../../Redux/ActionCreator/AdminUserActionCreator";
 import { useDispatch, useSelector } from "react-redux";
+import Filesvalidator from "../../../Validator/Filesvalidator";
 
 export default function Admincreateusers() {
   let navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Admincreateusers() {
   let [data, setdata] = useState({
     name: "",
     username: "",
-    pic:"",
+    pic: "",
     phone: "",
     email: "",
     password: "",
@@ -29,6 +30,7 @@ export default function Admincreateusers() {
     email: "Email field is Mendetory",
     password: "Password field is Mendatory",
     cpassword: "Conform password is Mendatory",
+    pic: "Pic Feild is Mendatory",
     role: "",
 
   })
@@ -37,12 +39,12 @@ export default function Admincreateusers() {
 
   function getinputdata(e) {
     var name = e.target.name
-    var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value 
+    var value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
 
     seterrormassege((old) => {
       return {
         ...old,
-        [name]: Formvalidator(e)
+        [name]: e.target.files ? Filesvalidator(e) : Formvalidator(e)
       }
     })
 
@@ -75,8 +77,8 @@ export default function Admincreateusers() {
         }
 
         const Fromdata = new FormData()
-        Object.keys(data).forEach(key=>
-          Fromdata.append(key,data[key])
+        Object.keys(data).forEach(key =>
+          Fromdata.append(key, data[key])
         )
 
         dispach(Createusers(Fromdata))
@@ -124,11 +126,6 @@ export default function Admincreateusers() {
                   {show && errormassege.name ? <p className="text-danger">{errormassege.name}</p> : null}
                 </div>
                 <div className="col-md-6 mb-3">
-                  <label>Phone*</label>
-                  <input type="number" name="phone" placeholder="Phone number" onChange={getinputdata} className={`form-control border-3 border-primary ${show && errormassege.phone ? 'border-danger' : 'border-primary'}`} />
-                  {show && errormassege.phone ? (<p className="text-danger">{errormassege.phone}</p>) : null}
-                </div>
-                <div className="col-md-6 mb-3">
                   <label>Username*</label>
                   <input type="text" name="username" onChange={getinputdata} placeholder=" Enter your username" className={`form-control border-3 border-primary ${show && errormassege.username ? "border-danger" : "border-primary"}`} />
                   {show && errormassege.username ? <p className="text-danger">{show && errormassege.username}</p> : null}
@@ -146,6 +143,15 @@ export default function Admincreateusers() {
                 <div className="col-md-6 mb-3">
                   <label>Conform Password*</label>
                   <input type="password" name="cpassword" onChange={getinputdata} placeholder=" Enter your conform password" className={`form-control border-3 border-primary ${show && errormassege.cpassword ? "border-danger" : "border-primary"}`} />
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label>Pic*</label>
+                  <input type="file" name="pic" onChange={getinputdata} className={`form-control border-3 border-primary ${show && errormassege.pic ? "border-danger" : "border-primary"}`} />
+                  {show && errormassege.pic ? <p className="text-danger">{errormassege.pic}</p> : null}
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label>Phone*</label>
+                  <input type="number" name="phone" onChange={getinputdata} placeholder=" Enter your Phone Number" className={`form-control border-3 border-primary ${show && errormassege.phone ? "border-danger" : "border-primary"}`} />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label>Role*</label>

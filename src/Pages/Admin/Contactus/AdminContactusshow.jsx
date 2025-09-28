@@ -20,13 +20,18 @@ export default function Admincontactus() {
       navigate("/admin/contactus")
     }
   }
-  async function updateactive() {
-    if (window.confirm("Are you sure to update active status")) {
-      let item = contractusstatedata.find(x => x._id === id)
-      dispach(updatecontractus({ ...item, active: !item.active }))
-      getapidata();
-    }
-  }
+ async function updateactive(id) {
+     if (window.confirm("Are you sure to update active status")) {
+       let item = contractusstatedata.find(x => x._id === id)
+        item.active= !item.active;
+        const Fromdata = new FormData()
+        Object.keys(item).forEach(key=>
+         Fromdata.append(key,item[key])
+        )
+       dispach(updatecontractus(Fromdata))
+       getapidata();
+     }
+   }
   function getapidata() {
     dispach(getcontractus())
     if (contractusstatedata.length) {
@@ -85,7 +90,7 @@ export default function Admincontactus() {
                     <td>{data.active ? "Yes" : "NO"}</td>
                   </tr>
                   <tr >
-                    {data.active ? <><th colSpan={2}><button className="btn btn-primary w-100" onClick={updateactive}>Update</button></th></> : <> 
+                    {data.active ? <><th colSpan={2}><button className="btn btn-primary w-100" onClick={()=>{updateactive(data._id)}}>Update</button></th></> : <> 
                       <th colSpan={2}><button className={`btn btn-danger w-100 ${localStorage.getItem("role")==="Super Admin"?"":"d-none"}`} onClick={deleteitem}>Delete</button></th></>}
                   </tr>
                 </tbody>

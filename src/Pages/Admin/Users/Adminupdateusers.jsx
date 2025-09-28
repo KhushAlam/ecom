@@ -4,7 +4,7 @@ import Breadcrum from "../../../Components/Breadcrum";
 import Sidebar from "../Sidebar";
 import { Form, Link, useNavigate, useParams } from "react-router-dom";
 import Formvalidator from "../../../Validator/Formvalidator";
-// import Filesvalidator from "../../../Validator/Filesvalidator";
+import Filesvalidator from "../../../Validator/Filesvalidator";
 import { getusers, updateusers } from "../../../Redux/ActionCreator/AdminUserActionCreator";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,6 +19,7 @@ export default function Adminupdateusers() {
         name: "",
         username: "",
         phone: "",
+        pic:"",
         email: "",
         password: "",
         cpassword: "",
@@ -33,14 +34,15 @@ export default function Adminupdateusers() {
         password: "",
         cpassword: "",
         role: "",
+        pic:""
     })
 
     let [show, setshow] = useState(false);
 
     function getinputdata(e) {
-        var { name, value } = e.target
-        // var name = e.target.name
-        // var value = e.target.files && e.target.files.length ? "brand/" + e.target.files[0].name : e.target.value
+        // var { name, value } = e.target
+        var name = e.target.name
+        var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value
 
         seterrormassege((old) => {
             return {
@@ -63,7 +65,7 @@ export default function Adminupdateusers() {
             setshow(true)
         }
         else {
-            let item = userstatedata.find(x => x.id !== id &&
+            let item = userstatedata.find(x => x._id !== id &&
                 (x.username?.toLowerCase() === data.username?.toLowerCase()
                     || x.email?.toLowerCase() === data.email?.toLowerCase()))
             if (item) {
@@ -76,14 +78,20 @@ export default function Adminupdateusers() {
                 })
                 return
             }
-            dispach(updateusers({ ...data }))
+
+            const Fromdata= new FormData()
+            Object.keys(data).forEach(key=>{
+                Fromdata.append(key,data[key]);
+            })
+
+            dispach(updateusers(Fromdata))
             navigate("/admin/user");
         }
     }
     useEffect(() => {
         dispach(getusers())
         if (userstatedata.length) {
-            let item = userstatedata.find(x => x.id === id)
+            let item = userstatedata.find(x => x._id === id)
             if (!item) {
                 navigate("/admin/user")
                 return;
@@ -93,7 +101,7 @@ export default function Adminupdateusers() {
             }
             setdata(item)
         }
-    }, [userstatedata.length.id])
+    }, [])
     return (
         <>
             <Breadcrum title="Admin" />
@@ -113,7 +121,7 @@ export default function Adminupdateusers() {
                             <div className="row">
                                 <div className="col-md-6 mb-3">
                                     <label>Name*</label>
-                                    <input type="text" name="name" value={data.name} onChange={getinputdata} placeholder=" Enter Full name" className={`form-control border-3 border-primary ${show && errormassege.name ? "border-danger" : "border-primary"}`} />
+                                    <input type="text" name="name" value={data.name} onChange={getinputdata} placeholder=" Enter Full name" className={`form-control border-3 border-primary ${show && errormassege.name ? "border-danger" : "border-primary"}`} disabled />
                                     {show && errormassege.name ? <p className="text-danger">{errormassege.name}</p> : null}
                                 </div>
                                 <div className="col-md-6 mb-3">
@@ -139,6 +147,10 @@ export default function Adminupdateusers() {
                                 <div className="col-md-6 mb-3">
                                     <label>Conform Password*</label>
                                     <input type="password" name="cpassword" onChange={getinputdata} placeholder=" Enter your conform password" className={`form-control border-3 border-primary ${show && errormassege.cpassword ? "border-danger" : "border-primary"}`} />
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                    <label>Pic*</label>
+                                    <input type="file" name="pic" onChange={getinputdata}  className={`form-control border-3 border-primary ${show && errormassege.pic ? "border-danger" : "border-primary"}`} />
                                 </div>
                                 <div className="col-md-6 mb-3">
                                     <label>Role*</label>

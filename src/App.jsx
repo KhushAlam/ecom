@@ -75,9 +75,9 @@ export default function App() {
             <Route path="/order-confirmation" element={<OrderConfirmation />} /></> : null}
 
           {/* Admin routes */}
-          {/* {localStorage.getItem("login") && (localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Super Admin") */}
-            {/* ? */}
-            {/* <> */}
+          {localStorage.getItem("login") && (localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Super Admin")
+            ?
+            <>
               <Route path="/admin" element={<Adminhome />} />
               <Route path="/admin/maincategory" element={<Adminmaincategory />} />
               <Route path="/admin/maincategory/create" element={<Adminmaincategorycreate />} />
@@ -111,7 +111,7 @@ export default function App() {
               <Route path="/admin/user" element={<Adminusers />} />
               <Route path="/admin/user/create" element={<Admincreateusers />} />
               <Route path="/admin/user/update/:id" element={<Adminupdateusers />} />
-              {/* </> : null} */}
+              </> : null}
 
           <Route path="/*" element={<ErrorPage />} />
 

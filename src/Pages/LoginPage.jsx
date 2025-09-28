@@ -20,38 +20,47 @@ export default function LoginPage() {
   }
 
   async function postinputdata(e) {
-    e.preventDefault()
-    let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user`, {
-      method: "GET",
+    e.preventDefault();
+
+    let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/login`, {
+      method: "POST",
       headers: {
         "content-type": "application/json"
       },
-    })
+      body: JSON.stringify(data)
+    });
+
     response = await response.json();
-    let item = response.find(x => (x.username === data.username && x.password === data.password) || (x.email.toLowerCase() === data.username.toLowerCase() && x.password === data.password))
+    
+      alert(response.message);
+      
+    if(!response||!response.data){
+      seterrormassege("User Id Or Password Invalid")
+      return 
+    }
+    let item = response.data;
     if (item && item.active === "fa") {
-      seterrormassege("Your Account is Blocked Contract us For unBlock")
-      return
+      seterrormassege("Your Account is Blocked. Contact us for unBlock");
+      return;
     } else if (item) {
-      localStorage.setItem("login", true)
-      localStorage.setItem("name", item.name)
-      localStorage.setItem("userid", item.id)
-      localStorage.setItem("role", item.role)
-      // console.log(item.role)
+      localStorage.setItem("login", true);
+      localStorage.setItem("name", item.name);
+      localStorage.setItem("userid", item._id);
+      localStorage.setItem("role", item.role);
+      localStorage.setItem("token", response.token);
+
       if (item.role === "Buyer") {
-        navigate("/profile")
-      }
-      else if(item.role===undefined) {
-        navigate("/*")
-      }
-      else {
-        navigate("/admin")
+        navigate("/profile");
+      } else if (item.role === undefined) {
+        navigate("/*");
+      } else {
+        navigate("/admin");
       }
     } else {
-      seterrormassege("Invalid Username or Password")
+      seterrormassege("Something went Wrong");
     }
-
   }
+
 
   return (
     <>

@@ -7,7 +7,7 @@ export default function Profile({ title }) {
   let role =localStorage.getItem("role");
   useEffect(() => {
     (async () => {
-      let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/${localStorage.getItem("userid")}`, {
+      let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/get/${localStorage.getItem("userid")}`, {
         method: "GET",
         headers: {
           "content-type": "application/json"
@@ -15,7 +15,7 @@ export default function Profile({ title }) {
       })
       response = await response.json()
       if (response) {
-        setdata({ ...response })
+        setdata(response.data)
       }
     })()
   }, [])
@@ -24,7 +24,7 @@ export default function Profile({ title }) {
       <h5 className='bg-primary text-center p-2 text-light'>{title} Address</h5>
       <div className="row">
         <div className={`${title==='Billing'?'d-none':''} col-md-6`}>
-          <img src={data.pic ? `${process.env.REACT_APP_SITE_MAINCATEGORY}${data.pic}` : '/assets/img/nouser.webp'} className='w-100 ' height={440} alt='' />
+          <img src={data.pic ? `${data?.pic}` : '/assets/img/nouser.webp'} className='w-100 ' height={440} alt='' />
         </div>
         <div className="col-md-6 mb-3 ">
           <table className='table table-bordered table-striped table-hover  w-100'>
@@ -34,19 +34,19 @@ export default function Profile({ title }) {
                   <>
                     <tr>
                       <th>Name</th>
-                      <td>{data.name}</td>
+                      <td>{data?.name}</td>
                     </tr>
                     <tr>
                       <th>Username</th>
-                      <td>{data.username}</td>
+                      <td>{data?.username}</td>
                     </tr>
                     <tr>
                       <th>Email Address</th>
-                      <td>{data.email}</td>
+                      <td>{data?.email}</td>
                     </tr>
                     <tr>
                       <th>Phone</th>
-                      <td>+91 {data.phone}</td>
+                      <td>+91 {data?.phone}</td>
                     </tr>
                     {localStorage.getItem("role") !== "Buyer" ? <>
                       <tr>
