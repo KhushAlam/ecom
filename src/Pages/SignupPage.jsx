@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Breadcrum from '../Components/Breadcrum'
 import { Link, useNavigate } from 'react-router-dom';
 import Formvalidator from '../Validator/Formvalidator';
+import Filesvalidator from '../Validator/Filesvalidator';
 export default function SignupPage() {
     let navigate = useNavigate();
     let [data, setdata] = useState({
@@ -10,7 +11,8 @@ export default function SignupPage() {
         username: "",
         email: "",
         password: "",
-        cpassword: ""
+        cpassword: "",
+        active: true,
     });
     let [errormassege, seterrormassege] = useState({
         name: "Name Feild is Mendetory",
@@ -22,7 +24,7 @@ export default function SignupPage() {
     });
     let [show, setshow] = useState(false)
     function getiputdata(e) {
-        let { name, value } = e.target;
+        let { name, value } = e.target
         seterrormassege((old) => {
             return {
                 ...old,
@@ -46,14 +48,14 @@ export default function SignupPage() {
             }
             else {
 
-                let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user`, {
+                let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/get`, {
                     method: "GET",
                     headers: {
                         "content-type": "application/json"
                     },
                 })
                 response = await response.json();
-                let item = response.find(x => (x.username?.toLowerCase() === data.username?.toLowerCase()) || (x.email.toLowerCase() === data.email?.toLowerCase()))
+                let item = response.data?.find(x => (x.username?.toLowerCase() === data.username?.toLowerCase()) || (x.email.toLowerCase() === data.email?.toLowerCase()))
                 if (item) {
                     setshow(true);
                     seterrormassege((old) => {
@@ -65,20 +67,19 @@ export default function SignupPage() {
                     })
                     return
                 }
-                response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user`, {
+
+                const Fromdata = new FormData()
+                Object.keys(data).forEach(key =>
+                    Fromdata.append(key, data[key])
+                )
+                let role="Buyer"
+                Fromdata.append("role", role);
+                Fromdata.append("active", true);
+                response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/create`, {
                     method: "POST",
                     headers: {
-                        "content-type": "application/json"
                     },
-                    body: JSON.stringify({
-                        name: data.name,
-                        username: data.username,
-                        email: data.email,
-                        phone: data.phone,
-                        password: data.password,
-                        role: "Buyer",
-                        active: true
-                    })
+                    body: Fromdata
                 })
                 response = await response.json()
                 navigate("/login")

@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema({
     },
     pic: {
         type: String,
-        required: true
     },
     phone: {
         type: String,
@@ -41,7 +40,6 @@ const userSchema = new mongoose.Schema({
     },
     cpassword: {
         type: String,
-        required: [true, "Password is required"],
         minlength: [6, "Password must be at least 6 characters"]
     },
     role: {
@@ -56,6 +54,15 @@ const userSchema = new mongoose.Schema({
     active: {
         type: Boolean,
         default: true
+    },
+    city:{
+        type:String,
+    },
+    state:{
+        type:String,
+    },
+    pincode:{
+        type:Number
     }
 }, {
     timestamps: true

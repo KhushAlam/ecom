@@ -19,7 +19,7 @@ export default function Navbar() {
     let data = await responce.json()
     if (!data) return
 
-    toast.sucess(data?.msg, { autoClose: 3000 });
+    toast.success(data?.msg, { autoClose: 3000 });
     localStorage.removeItem("name")
     localStorage.removeItem("login")
     localStorage.removeItem("userid")
@@ -155,7 +155,7 @@ export default function Navbar() {
                           )
                         }
                         <li><button onClick={logout} className="dropdown-item border-0 bg-white">Logout</button>
-                          <ToastContainer /></li>
+                         </li>
                       </ul>
                     </div>
                   )

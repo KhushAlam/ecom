@@ -164,6 +164,9 @@ userRouter.put("/update/:id", upload.single("pic"), async (req, res) => {
         updateddata.password = updateddata.password ? updateddata.password : existdata.password
         updateddata.address = updateddata.address ? updateddata.address : existdata.address
         updateddata.phone = updateddata.phone ? updateddata.phone : existdata.phone
+        updateddata.city=updateddata?.city?updateddata?.city:existdata?.city||""
+        updateddata.state=updateddata?.state?updateddata?.state:existdata?.state||""
+        updateddata.pincode=updateddata?.pincode?updateddata?.pincode:existdata?.pincode||""
 
         const update = await User.findByIdAndUpdate(id, updateddata, {
             new: true,

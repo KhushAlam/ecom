@@ -80,7 +80,7 @@ export default function AdmincreateProduct() {
       setshow(true)
     }
     else {
-      dispach(Createproduct({
+      const newdata = {
         ...data,
         basePrice: bp,
         disCount: d,
@@ -90,8 +90,13 @@ export default function AdmincreateProduct() {
         subcategory: data.subcategory ? data.subcategory : subcategorystatedata[0].name,
         brand: data.brand ? data.brand : brandstatedata[0].name,
         discription: rte.getHTMLCode()
+      }
 
-      }))
+      const Fromdata = new FormData()
+      Object.keys(newdata).forEach(key =>
+        Fromdata.append(key, newdata[key])
+      )
+      dispach(Createproduct(Fromdata))
 
       // for real backend
 

@@ -116,7 +116,7 @@ export default function AdminupdateProduct() {
             rte = new window.RichTextEditor(refdiv.current);
             rte.setHTMLCode(item.description);
         }
-    }, [productstatedata.length])
+    }, [])
     useEffect(() => {
         dispach(getmaincategory())
     }, [])

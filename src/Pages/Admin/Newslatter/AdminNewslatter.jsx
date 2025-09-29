@@ -54,7 +54,7 @@ export default function Adminnewslatter() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [newslatterstatedata])
+  }, [])
   return (
     <>
       <Breadcrum title="Admin" />

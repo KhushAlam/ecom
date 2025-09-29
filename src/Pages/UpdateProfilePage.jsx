@@ -17,7 +17,7 @@ export default function UpdateProfilePage() {
         pincode: "",
         pic: "",
         password: "",
-        // cpassword: ""
+        cpassword: "",
         role: ""
 
     });
@@ -32,7 +32,7 @@ export default function UpdateProfilePage() {
     let [show, setshow] = useState(false)
     function getiputdata(e) {
         let name = e.target.name;
-        let value = e.target.files && e.target.files.length ? "product/" + e.target.files[0].name : e.target.value
+        let value = e.target.files && e.target.files.length ? e.target.files[0] : e.target.value
 
         seterrormassege((old) => {
             return {
@@ -55,24 +55,27 @@ export default function UpdateProfilePage() {
             setshow(true);
         }
         else {
-            let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user`, {
+            let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/get`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json"
                 },
             })
             response = await response.json();
-            let item = response.find(x => x.id !== localStorage.getItem("userid") && ((x.username?.toLowerCase() === data.username?.toLowerCase()) || (x.email.toLowerCase() === data.email?.toLowerCase())))
+            let item = response?.data.find(x => x._id !== localStorage.getItem("userid") && ((x.username?.toLowerCase() === data.username?.toLowerCase()) || (x.email.toLowerCase() === data.email?.toLowerCase())))
             if (item) {
                 setshow(true);
                 return
             }
-            response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/${localStorage.getItem("userid")}`, {
+            const Fromdata = new FormData()
+            Object.keys(data).forEach(key =>
+                Fromdata.append(key, data[key])
+            )
+            response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/update/${localStorage.getItem("userid")}`, {
                 method: "PUT",
                 headers: {
-                    "content-type": "application/json"
                 },
-                body: JSON.stringify({ ...data })
+                body: Fromdata
             })
             response = await response.json()
             if (localStorage.getItem("role") === "Buyer")
@@ -84,7 +87,7 @@ export default function UpdateProfilePage() {
 
     useEffect(() => {
         (async () => {
-            let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/${localStorage.getItem("userid")}`, {
+            let response = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/get/${localStorage.getItem("userid")}`, {
                 method: "GET",
                 headers: {
                     "content-type": "application/json"
@@ -93,17 +96,17 @@ export default function UpdateProfilePage() {
             response = await response.json()
             if (response) {
                 setdata({
-                    name: response.name || "",
-                    phone: response.phone || "",
-                    username: response.username || "",
-                    email: response.email || "",
-                    address: response.address || "",
-                    city: response.city || "",
-                    state: response.state || "",
-                    pin: response.pin || "",
-                    pic: response.pic || "",
-                    password: response.password || "",
-                    role: response.role || "",
+                    name: response.data.name || "",
+                    phone: response.data.phone || "",
+                    username: response.data.username || "",
+                    email: response.data.email || "",
+                    address: response.data.address || "",
+                    city: response.data.city || "",
+                    state: response.data.state || "",
+                    pin: response.data.pin || "",
+                    pic: response.data.pic || "",
+                    password: response.data.password || "",
+                    role: response.data.role || "",
 
                 })
             }
@@ -129,11 +132,11 @@ export default function UpdateProfilePage() {
                             </div>
                             <div className="row">
                                 <div className="col-md-6 mb-3">
-                                    <input type="text" name="username" value={data.username} onChange={getiputdata} placeholder='Enter UserName' className={`border-3 form-control ${show && errormassege.username ? "border-danger" : "border-primary"}`} />
+                                    <input type="text" name="username" value={data.username} disabled onChange={getiputdata} placeholder='Enter UserName' className={`border-3 form-control ${show && errormassege.username ? "border-danger" : "border-primary"}`} />
                                     {show && errormassege.username ? <p className='text-danger'>{errormassege.username}</p> : null}
                                 </div>
                                 <div className="col-md-6 mb-3">
-                                    <input type="text" name="email" value={data.email} onChange={getiputdata} placeholder='Enter email Address' className={`border-3 form-control ${show && errormassege.email ? "border-danger" : "border-primary"}`} />
+                                    <input type="text" name="email" value={data.email} disabled onChange={getiputdata} placeholder='Enter email Address' className={`border-3 form-control ${show && errormassege.email ? "border-danger" : "border-primary"}`} />
                                     {show && errormassege.email ? <p className='text-danger'>{errormassege.email}</p> : null}
                                 </div>
                             </div>

@@ -22,7 +22,7 @@ export default function Adminproduct() {
   function getapidata() {
     dispach(getproduct())
 
-    if (productstatedata.length) {
+    if (productstatedata?.length) {
       setdata(productstatedata);
       let time = setTimeout(() => {
         $('#myTable').DataTable()
@@ -33,10 +33,14 @@ export default function Adminproduct() {
     }
 
   }
+
   useEffect(() => {
-    let time = getapidata()
-    return () => clearTimeout(time)
-  }, [productstatedata])
+    (() => {
+      let time = getapidata()
+      return () => clearTimeout(time)
+    })()
+  }, [])
+
   return (
     <>
       <Breadcrum title="Admin" />
@@ -76,7 +80,7 @@ export default function Adminproduct() {
                 </thead>
                 <tbody>
                   {
-                    productstatedata.map((item) => {
+                    productstatedata?.map((item) => {
                       return <tr key={item._id}>
                         <td>{item._id}</td>
                         <td>{item.name}</td>
