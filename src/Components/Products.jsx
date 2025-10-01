@@ -12,11 +12,11 @@ export default function Products() {
 
   useEffect(() => {
     dispatch(getproduct());
-  }, [productstatedata.length])
+  }, [])
 
   useEffect(() => {
     dispatch(getmaincategory());
-  }, [maincategorystatedata.length])
+  }, [])
   return (
     <>
       <section id="portfolio" className="portfolio section">
@@ -41,7 +41,7 @@ export default function Products() {
               </li>
               {
                 maincategorystatedata.filter((x) => x.active).map((item) => {
-                  return <li data-filter={`.filter-${item.name}`} onClick={() => { setselectedcategory(item.name) }} key={item.id}>{item.name}</li>
+                  return <li data-filter={`.filter-${item.name}`} onClick={() => { setselectedcategory(item.name) }} key={item._id}>{item.name}</li>
                 })
               }
             </ul>
@@ -53,9 +53,9 @@ export default function Products() {
             >
               {
                 productstatedata.filter((x) => x.active && (selectedcategory === '' || selectedcategory === x.maincategory)).map((item) => {
-                  return <div key={item.id} className={`col-lg-4 col-md-6 portfolio-item `}>
+                  return <div key={item._id} className={`col-lg-4 col-md-6 portfolio-item `}>
                     <div className="portfolio-content h-100">
-                      <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic[0]}`} style={{ height: 250, width: "100%" }} className="img-fluid" alt="" />
+                      <img src={`${item.pic[0]}`} style={{ height: 250, width: "100%" }} className="img-fluid" alt="" />
                       <div className="portfolio-info h-10">
                         <h4>{item.maincategory}</h4>
                         <h4 className="float-end">{item.stock?`${item.stockQuantity} Left in Stock`:`Out of Stock`}</h4>
@@ -77,7 +77,7 @@ export default function Products() {
                         width:"100%",
                         zIndex:10
                       }}>
-                       <Link to={`/product/${item.id}`}  className="btn btn-primary w-100"><i className="fa fa-shopping text-white">Add to Cart</i></Link>
+                       <Link to={`/product/${item._id}`}  className="btn btn-primary w-100"><i className="fa fa-shopping text-white">Add to Cart</i></Link>
                  </div>
                     </div>
                   </div>

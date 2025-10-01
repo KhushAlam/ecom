@@ -84,15 +84,15 @@ export default function ShopPage() {
 
   useEffect(() => {
     dispatch(getmaincategory())
-  }, [maincategorystatedata.length])
+  }, [])
 
   useEffect(() => {
     dispatch(getsubcategory())
-  }, [subcategorystatedata.length])
+  }, [])
 
   useEffect(() => {
     dispatch(getbrand())
-  }, [brandstatedata.length])
+  }, [])
 
   useEffect(() => {
 
@@ -102,13 +102,13 @@ export default function ShopPage() {
     let scValue = searchParams.get("sc") ?? "All";
     let brValue = searchParams.get("br") ?? "All";
     dispatch(getproduct())
-    if (productstatedata.length) {
+    if (productstatedata) {
       setmc(mcValue);
       setsc(scValue);
       setbr(brValue);
       filterProduct(mcValue, scValue, brValue)
     }
-  }, [searchParams, productstatedata.length]);
+  }, []);
 
   return (
     <>
@@ -122,7 +122,7 @@ export default function ShopPage() {
               {
                 maincategorystatedata.filter((x) => x.active).map((item) => {
                   return (
-                    <Link key={item.id} to={`/shop?mc=${item.name}&sc=${sc}&br=${br}`} className="list-group-item">
+                    <Link key={item._id} to={`/shop?mc=${item.name}&sc=${sc}&br=${br}`} className="list-group-item">
                       {item.name}
                     </Link>
                   )
@@ -136,7 +136,7 @@ export default function ShopPage() {
               {
                 subcategorystatedata.filter((x) => x.active).map((item) => {
                   return (
-                    <Link key={item.id} to={`/shop?mc=${mc}&sc=${item.name}&br=${br}`} className="list-group-item">
+                    <Link key={item._id} to={`/shop?mc=${mc}&sc=${item.name}&br=${br}`} className="list-group-item">
                       {item.name}
                     </Link>
                   )
@@ -150,7 +150,7 @@ export default function ShopPage() {
               {
                 brandstatedata.filter((x) => x.active).map((item) => {
                   return (
-                    <Link key={item.id} to={`/shop?mc=${mc}&sc=${sc}&br=${item.name}`} className="list-group-item">
+                    <Link key={item._id} to={`/shop?mc=${mc}&sc=${sc}&br=${item.name}`} className="list-group-item">
                       {item.name}
                     </Link>
                   )
@@ -196,7 +196,7 @@ export default function ShopPage() {
               <div className="row">
                 {data.map((item) => {
                   return (
-                    <div key={item.id} className='col-lg-3 col-md-4 col-sm-6'>
+                    <div key={item._id} className='col-lg-3 col-md-4 col-sm-6'>
                       <div
                         className="d-flex align-items-stretch"
                         data-aos="fade-up"
@@ -205,7 +205,7 @@ export default function ShopPage() {
                         <div className="team-member">
                           <div className="member-img">
                             <img
-                              src={`${process.env.REACT_APP_SITE_SUBCATEGORY}${item.pic[0]}`}
+                              src={`${item.pic[0]}`}
                               className="img-fluid"
                               style={{ height: 300 }}
                               alt=""
@@ -218,7 +218,7 @@ export default function ShopPage() {
                               <del>&#8377;{item.basePrice}</del> &#8377;{item.finalPrice} <sup>{item.disCount}% Off</sup>
                             </p>
                             <div className="">
-                              <Link to={`/product/${item.id}`} className="w-100 btn btn-primary">
+                              <Link to={`/product/${item._id}`} className="w-100 btn btn-primary">
                                 <i className="fa fa-shopping-cart"></i> Add to cart
                               </Link>
                             </div>

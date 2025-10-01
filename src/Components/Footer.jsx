@@ -33,7 +33,7 @@ export default function Footer() {
     (() => {
       dispatch(getNewslatter())
     })()
-  }, [newslatterstatedata])
+  }, [])
 
   return (
     <>

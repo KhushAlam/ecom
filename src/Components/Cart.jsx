@@ -101,7 +101,7 @@ export default function Cart({ title, data }) {
         if (data) {
             calculation(data)
         }
-        else if (cartstatedata.length) {
+        else if (cartstatedata) {
             let data = cartstatedata.filter(x => x.user === localStorage.getItem("userid"))
             setcartdata(data)
             calculation(data)
@@ -114,19 +114,19 @@ export default function Cart({ title, data }) {
 
     useEffect(() => {
         cartapidata()
-    }, [cartstatedata.length])
+    }, [cartstatedata])
 
     useEffect(() => {
         (() => {
             dispatch(getproduct())
         })()
-    }, [productstatedata.length])
+    }, [productstatedata])
     return (
         <>
             <div className="container-fluid">
                 <h4 className='text-light text-center p-1 bg-primary w-100'>{title} Section</h4>
                 {
-                    cartdata.length ?
+                    cartdata ?
                         <>
                             <div className="table-responsive">
                                 <table className='table table-bordered table-striped table-hover'>

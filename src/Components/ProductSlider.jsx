@@ -52,7 +52,7 @@ export default function ProductSlider({ tittle, data }) {
                       <div className="team-member">
                         <div className="member-img">
                           <img
-                            src={`${process.env.REACT_APP_SITE_SUBCATEGORY}${item.pic[0]}`}
+                            src={`${item.pic[0]}`}
                             className="img-fluid"
                             style={{ height: 300 }}
                             alt=""

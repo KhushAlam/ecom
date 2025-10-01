@@ -58,8 +58,17 @@ export default function AdminupdateProduct() {
 
     function getinputdata(e) {
         var name = e.target.name
-        var value = e.target.files && e.target.files.length ? data.pic.concat(Array.from(e.target.files).map(x => "product/" + x.name)) : e.target.value //For multipal files
+        // var value = e.target.files && e.target.files.length ? data.pic.concat(Array.from(e.target.files).map(x => x)) : e.target.value //For multipal files
         // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
+        let value;
+        if (e.target.files && e.target.files.length) {
+            // multiple files ke liye
+            let newFiles = Array.from(e.target.files);
+            value = [...(data.pic || []), ...newFiles]
+        } else {
+            value = e.target.value;
+        }
+
         seterrormassege((old) => {
             return {
                 ...old,
@@ -85,7 +94,7 @@ export default function AdminupdateProduct() {
             setshow(true)
         }
         else {
-            dispach(updateproduct({
+            const newdata = {
                 ...data,
                 basePrice: bp,
                 disCount: d,
@@ -94,24 +103,34 @@ export default function AdminupdateProduct() {
                 maincategory: data.maincategory ? data.maincategory : maincategorystatedata[0].name,
                 subcategory: data.subcategory ? data.subcategory : subcategorystatedata[0].name,
                 brand: data.brand ? data.brand : brandstatedata[0].name,
-                discription: rte.getHTMLCode()
+                description: rte.getHTMLCode(), // ✅ spelling fixed
+            };
 
-                // for real backend
+            const formData = new FormData();
 
-                //   let fromdata=new FormData()
-                // fromdata.append("name",data.name);
-                // fromdata.append("pic",data.pic);
-                // fromdata.append("active",data.active)
-                // dispach(Createproduct(fromdata))
+            // append normal fields
+            Object.keys(newdata).forEach((key) => {
+                if (key !== "pic") {
+                    formData.append(key, newdata[key]);
+                }
+            });
 
-            }))
+            // append multiple files
+            if (data.pic && data.pic.length > 0) {
+                for (let i = 0; i < data.pic.length; i++) {
+                    formData.append("pic", data.pic[i]);
+                }
+            }
+
+
+            dispach(updateproduct(formData))
             navigate("/admin/product");
         }
     }
     useEffect(() => {
         dispach(getproduct())
         if (productstatedata.length) {
-            let item = productstatedata.find(x => x.id === id)
+            let item = productstatedata.find(x => x._id === id)
             setdata(item)
             rte = new window.RichTextEditor(refdiv.current);
             rte.setHTMLCode(item.description);
@@ -124,6 +143,7 @@ export default function AdminupdateProduct() {
     useEffect(() => {
         dispach(getsubcategory())
     }, [])
+
     useEffect(() => {
         dispach(getbrand())
     }, [])
@@ -132,6 +152,7 @@ export default function AdminupdateProduct() {
         rte = new window.RichTextEditor(refdiv.current);
         rte.setHTMLCode("");
     }, [])
+
     return (
         <>
             <Breadcrum title="Admin" />
@@ -252,14 +273,25 @@ export default function AdminupdateProduct() {
                                 </div>
                                 <div className="col-md-6 mb-3 ">
                                     <label>Pic(Click on pic for delete)</label>
-                                    {data.pic.map((pic, index) => {
-                                        return <img onClick={() => {
-                                            data.pic.splice(index, 1)
-                                            setflag(!flag)
-                                        }
-                                        } src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${pic}`} height={80} width={70} className="me-2 cursor-pointer" />
-                                    })
-                                    }
+                                    {Array.isArray(data?.pic) &&
+                                        data.pic.map((pic, index) => {
+                                            const src = typeof pic === "string" ? pic : URL.createObjectURL(pic);
+                                            return (
+                                                <img
+                                                    key={index}
+                                                    onClick={() => {
+                                                        const newPics = data.pic.filter((_, i) => i !== index);
+                                                        setdata((old) => ({ ...old, pic: newPics }));
+                                                    }}
+                                                    src={src}
+                                                    height={80}
+                                                    width={70}
+                                                    alt="preview"
+                                                    className="me-2 cursor-pointer"
+                                                />
+                                            );
+                                        })}
+
                                 </div>
                             </div>
                             <div className="mb-3">

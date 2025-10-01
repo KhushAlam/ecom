@@ -1,11 +1,11 @@
 import { CREATE_PRODUCT, CREATE_PRODUCT_RED, DELETE_PRODUCT, DELETE_PRODUCT_RED, GET_PRODUCT, GET_PRODUCT_RED, UPDATE_PRODUCT, UPDATE_PRODUCT_RED } from "../Constent";
 // import { createmultipathRecord, createRecord, deleteRecord, getRecord, updateRecord } from './Services/Index';
 import { createRecord, deleteRecord, getRecord, updatemultiRecord, updateRecord } from './Services/Index';
-import { takeEvery, put } from "redux-saga/effects";
+import { takeEvery, put, call } from "redux-saga/effects";
 
 
 function* createSaga(action) {
-    let responce = yield createRecord("product",action.payload)
+    let responce = yield call(createRecord, "admin/product", action.payload)
     yield put({ type: CREATE_PRODUCT_RED, payload: responce })
 
     // let responce = yield createmultipathRecord("product")
@@ -13,18 +13,18 @@ function* createSaga(action) {
 }
 
 function* getSaga(action) {
-    let responce = yield getRecord("product", action.payload)
+    let responce = yield call(getRecord, "admin/product", action.payload)
     yield put({ type: GET_PRODUCT_RED, payload: responce })
 }
 function* updateSaga(action) {
-    let responce = yield updateRecord("product", action.payload)
+    let responce = yield call(updateRecord, "admin/product", action.payload)
     yield put({ type: UPDATE_PRODUCT_RED, payload: action.payload })
 
     // let responce = yield updatemultiRecord("product", action.payload)
     // yield put({ type: UPDATE_PRODUCT_RED, payload: action.payload })
 }
 function* deleteSaga(action) {
-    let responce = yield deleteRecord("product", action.payload)
+    let responce = yield call(deleteRecord, "admin/product", action.payload)
     yield put({ type: DELETE_PRODUCT_RED, payload: action.payload })
 }
 export default function* productSagas() {

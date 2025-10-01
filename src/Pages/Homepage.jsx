@@ -27,15 +27,15 @@ export default function Homepage() {
 
   useEffect(() => {
     dispatch(getmaincategory())
-  }, [maincategorystatedata])
+  }, [])
 
   useEffect(() => {
     dispatch(getsubcategory())
-  }, [subcategorystatedata])
+  }, [])
 
   useEffect(() => {
     dispatch(getproduct())
-  }, [productstatedata])
+  }, [])
 
   return (
     <>
@@ -197,7 +197,7 @@ export default function Homepage() {
       <Value />
       {
         maincategorystatedata.filter((x) => x.active).map((item) => {
-          return <ProductSlider key={item.id} tittle={item.name} data={productstatedata.filter((x) => x.active && x.maincategory === item.name)} />
+          return <ProductSlider key={item._id} tittle={item.name} data={productstatedata?.filter((x) => x.active && x.maincategory === item.name)} />
         })
       }
       <Facts />

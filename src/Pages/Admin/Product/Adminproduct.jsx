@@ -9,37 +9,43 @@ import { getproduct, deleteproduct } from '../../../Redux/ActionCreator/ProductA
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Adminproduct() {
-  let dispach = useDispatch()
-  let productstatedata = useSelector(state => state.productstatedata)
+  let dispach = useDispatch();
+  let productstatedata = useSelector(state => state.productstatedata);
   let [data, setdata] = useState([]);
 
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
-      dispach(deleteproduct({ id: id }))
-      getapidata();
+      await dispach(deleteproduct({ id })); // ✅ wait for delete
+      dispach(getproduct()); // ✅ refresh product list from API
     }
   }
-  function getapidata() {
-    dispach(getproduct())
 
+  // run only once on mount
+  useEffect(() => {
+    dispach(getproduct());
+  }, [dispach]);
+
+  // run whenever Redux state changes
+  useEffect(() => {
     if (productstatedata?.length) {
       setdata(productstatedata);
+
+      // Destroy old table if exists
+      if ($.fn.DataTable.isDataTable("#myTable")) {
+        $("#myTable").DataTable().destroy();
+      }
+
+      // Initialize again
       let time = setTimeout(() => {
-        $('#myTable').DataTable()
-      }, 300)
-      return time
+        $("#myTable").DataTable();
+      }, 300);
+
+      return () => clearTimeout(time);
     } else {
       setdata([]);
     }
+  }, [productstatedata]);
 
-  }
-
-  useEffect(() => {
-    (() => {
-      let time = getapidata()
-      return () => clearTimeout(time)
-    })()
-  }, [])
 
   return (
     <>
@@ -80,9 +86,9 @@ export default function Adminproduct() {
                 </thead>
                 <tbody>
                   {
-                    productstatedata?.map((item) => {
+                    data.map((item) => {
                       return <tr key={item._id}>
-                        <td>{item._id}</td>
+                        <td>{item._id?.slice(0,4)}</td>
                         <td>{item.name}</td>
                         <td>{item.maincategory}</td>
                         <td>{item.subcategory}</td>

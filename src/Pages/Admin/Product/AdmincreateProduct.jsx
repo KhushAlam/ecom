@@ -14,8 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 var rte;
 export default function AdmincreateProduct() {
   var refdiv = useRef(null);
-
-
   let navigate = useNavigate();
   let dispach = useDispatch();
   let maincategorystatedata = useSelector(state => state.maincategorystatedata);
@@ -49,65 +47,77 @@ export default function AdmincreateProduct() {
 
   let [show, setshow] = useState(false);
 
-  function getinputdata(e) {
-    var name = e.target.name
-    var value = e.target.files && e.target.files.length ? Array.from(e.target.files).map(x => x) : e.target.value //For multipal files
-    // var value = e.target.files && e.target.files.length ?  e.target.files[0] : e.target.value for real backend
-    seterrormassege((old) => {
-      return {
-        ...old,
-        [name]: e.target.files ? Filesvalidator(e) : Formvalidator(e)
-      }
-    })
+ function getinputdata(e) {
+  var name = e.target.name;
 
-    setdata((old) => {
-      return {
-        ...old,
-        [name]: name === "active" ? (value === 1 ? true : false) : value
-      }
-    })
+  let value;
+  if (e.target.files && e.target.files.length) {
+    // multiple files ke liye
+    value = e.target.files;
+  } else {
+    value = e.target.value;
   }
-  function postinputdata(e) {
-    e.preventDefault()
-    let bp = parseInt(data.basePrice);
-    let d = parseInt(data.disCount);
-    let fp = parseInt(bp - bp * d / 100);
-    let stockQuantity = parseInt(data.stockQuantity);
 
-
-    let error = Object.values(errormassege).find(x => x !== "")
-    if (error) {
-      setshow(true)
+  seterrormassege((old) => {
+    return {
+      ...old,
+      [name]: e.target.files ? Filesvalidator(e) : Formvalidator(e)
     }
-    else {
-      const newdata = {
-        ...data,
-        basePrice: bp,
-        disCount: d,
-        finalPrice: fp,
-        stockQuantity: stockQuantity,
-        maincategory: data.maincategory ? data.maincategory : maincategorystatedata[0].name,
-        subcategory: data.subcategory ? data.subcategory : subcategorystatedata[0].name,
-        brand: data.brand ? data.brand : brandstatedata[0].name,
-        discription: rte.getHTMLCode()
+  });
+
+  setdata((old) => {
+    return {
+      ...old,
+      [name]: name === "active" ? (value === "1" ? true : false) : value
+    }
+  });
+}
+
+function postinputdata(e) {
+  e.preventDefault();
+
+  let bp = parseInt(data.basePrice);
+  let d = parseInt(data.disCount);
+  let fp = parseInt(bp - (bp * d) / 100);
+  let stockQuantity = parseInt(data.stockQuantity);
+
+  let error = Object.values(errormassege).find(x => x !== "");
+  if (error) {
+    setshow(true);
+  } else {
+    const newdata = {
+      ...data,
+      basePrice: bp,
+      disCount: d,
+      finalPrice: fp,
+      stockQuantity: stockQuantity,
+      maincategory: data.maincategory ? data.maincategory : maincategorystatedata[0].name,
+      subcategory: data.subcategory ? data.subcategory : subcategorystatedata[0].name,
+      brand: data.brand ? data.brand : brandstatedata[0].name,
+      description: rte.getHTMLCode(), // ✅ spelling fixed
+    };
+
+    const formData = new FormData();
+
+    // append normal fields
+    Object.keys(newdata).forEach((key) => {
+      if (key !== "pic") {
+        formData.append(key, newdata[key]);
       }
+    });
 
-      const Fromdata = new FormData()
-      Object.keys(newdata).forEach(key =>
-        Fromdata.append(key, newdata[key])
-      )
-      dispach(Createproduct(Fromdata))
-
-      // for real backend
-
-      //   let fromdata=new FormData()
-      // fromdata.append("name",data.name);
-      // fromdata.append("pic",data.pic);
-      // fromdata.append("active",data.active)
-      // dispach(Createproduct(fromdata))
-      navigate("/admin/product");
+    // append multiple files
+    if (data.pic && data.pic.length > 0) {
+      for (let i = 0; i < data.pic.length; i++) {
+        formData.append("pic", data.pic[i]);
+      }
     }
+
+    dispach(Createproduct(formData));
+    navigate("/admin/product");
   }
+}
+
   useEffect(() => {
     dispach(getmaincategory())
   }, [])
@@ -152,7 +162,7 @@ export default function AdmincreateProduct() {
                   <select name="maincategory" onChange={getinputdata} className="form-select border-3 border-primary" >
                     {
                       maincategorystatedata.filter(x => x.active).map((item) => {
-                        return <option key={item.id} value={item.name}>{item.name}</option>
+                        return <option key={item._id} value={item.name}>{item.name}</option>
                       })
                     }
                   </select>
@@ -162,7 +172,7 @@ export default function AdmincreateProduct() {
                   <select className="form-select border-3 border-primary" onChange={getinputdata} name="subcategory">
                     {
                       subcategorystatedata.filter(x => x.active).map((item) => {
-                        return <option key={item.id}>{item.name}</option>
+                        return <option key={item._id}>{item.name}</option>
                       })
                     }
                   </select></div>
@@ -171,7 +181,7 @@ export default function AdmincreateProduct() {
                   <select className="form-select border-3 border-primary" onChange={getinputdata} name="brand">
                     {
                       brandstatedata.filter(x => x.active).map((item) => {
-                        return <option key={item.id}>{item.name}</option>
+                        return <option key={item._id}>{item.name}</option>
                       })
                     }
                   </select>

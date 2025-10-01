@@ -25,10 +25,10 @@ newslatterRouter.get("/get", async (req, res) => {
     try {
         const data = await NewslatterModel.find()
         if (!data) {
-            return res.status(404).json({ message: "No Any Data" })
-        } else {
-            return res.status(201).json({ data: data, message: "Data Found" })
-        }
+            return res.status(404).json({data:[], message: "No Any Data" })
+        } 
+
+     return res.status(201).json({ data: data, message: "Data Found" })
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }

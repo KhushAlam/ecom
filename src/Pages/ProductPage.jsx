@@ -13,8 +13,6 @@ export default function ProductPage() {
     let [quentity, setquentity] = useState(1)
     let [relatedproduct, setrelatedproduct] = useState([])
 
-
-
     let dispatch = useDispatch()
     let navigate = useNavigate()
 
@@ -24,25 +22,25 @@ export default function ProductPage() {
 
     useEffect(() => {
         dispatch(getproduct());
-    }, [dispatch]);
+    }, [id]);
 
     useEffect(() => {
-        if (productstatedata.length) {
-            let item = productstatedata.find((x) => x.id === id);
+        if (productstatedata) {
+            let item = productstatedata.find((x) => x._id === id);
             if (item) {
                 setproduct(item);
-                setrelatedproduct(productstatedata.filter(x => x.maincategory === item.maincategory && x.id !== item.id));
+                setrelatedproduct(productstatedata.filter(x => x.maincategory === item.maincategory && x._id !== item._id));
             }
         }
-    }, [productstatedata, id]);
+    }, []);
 
     useEffect(() => {
         dispatch(getcart())
-    }, [cartstatedata.length])
+    }, [])
 
     useEffect(() => {
         dispatch(getwishlist())
-    }, [wishliststatedata.length])
+    }, [])
 
     function addtocart() {
         let item = cartstatedata.find((x) => x.product === id && x.user === localStorage.getItem("userid"))
@@ -80,7 +78,6 @@ export default function ProductPage() {
                 price: product.finalPrice,
                 stockQuantity: product.stockQuantity,
                 pic: product.pic[0],
-
             }
 
             dispatch(Createwishlist(item))
@@ -100,7 +97,7 @@ export default function ProductPage() {
                         <div id="carouselExampleIndicators" className="carousel slide">
                             <div className="carousel-indicators">
                                 {
-                                    product.pic.map((item, index) => {
+                                    product?.pic?.map((item, index) => {
                                         return <button key={index} type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to={index} className={`${index === 0 ? "active" : ""}`} aria-current="true" aria-label={`Slide ${index + 1}`}></button>
                                     })
                                 }
@@ -109,7 +106,7 @@ export default function ProductPage() {
                             <div className="carousel-inner">
                                 {product.pic?.map((item, index) => {
                                     return <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                                        <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item}`} height={450} className="d-block w-100" alt="item pic" />
+                                        <img src={`${item}`} height={450} className="d-block w-100" alt="item pic" />
                                     </div>
                                 })}
 
@@ -128,7 +125,7 @@ export default function ProductPage() {
                             <div className="my-2 d-flex justify-content-between" >
                                 {
                                     product.pic.map((item, index) => {
-                                        return <img key={index} src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item}`} height={100} width={100} data-bs-target="#carouselExampleIndicators" data-bs-slide-to={index} className='me-1 ' />
+                                        return <img key={index} src={`${item}`} height={100} width={100} data-bs-target="#carouselExampleIndicators" data-bs-slide-to={index} className='me-1 ' />
                                     })
                                 }
                             </div>
