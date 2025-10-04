@@ -38,7 +38,7 @@ export default function Admincheckout() {
   useEffect(() => {
     let time = getapidata()
     return () => clearTimeout(time)
-  }, [checkoutstatedata])
+  }, [])
 
   return (
     <>
@@ -70,8 +70,8 @@ export default function Admincheckout() {
                   {
                     checkoutstatedata?.map((item) => {
                       return <tr key={item._id}>
-                        <td>{item._id}</td>
-                        <td>{item.user}</td>
+                        <td>{item._id?.slice(0,4)}</td>
+                        <td>{item.user?.slice(0,4)}</td>
                         <td>{item.OrderStatus}</td>
                         <td>{item.PaymentMode}</td>
                         <td>{item.PaymentStatus}</td>
@@ -79,7 +79,7 @@ export default function Admincheckout() {
                         <td>&#8377;{item.shipping}</td>
                         <td>&#8377;{item.total}</td>
                         <td><div>{new Date(item.date).toLocaleString()}</div></td>
-                        <td><Link to={`${item.id}`}><button className="btn btn-primary"><i className="fa fa-eye"></i></button></Link></td>
+                        <td><Link to={`/admin/checkout/${item._id}`}><button className="btn btn-primary"><i className="fa fa-eye"></i></button></Link></td>
                         {/* <td>{!item.active ? <><button className="btn btn-danger"><i className="fa fa-trash "></i></button></> : null}</td> */}
                       </tr>
                     })

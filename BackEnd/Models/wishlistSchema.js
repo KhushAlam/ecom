@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-const cartSchema = mongoose.Schema({
+const wishlishSchema = mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Productmodel"
@@ -7,14 +7,6 @@ const cartSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    },
-    quentity: {
-        type: Number,
-        required: true,
-    },
-    total: {
-        type: Number,
-        required: true
     },
     name: {
         type: String,
@@ -36,7 +28,7 @@ const cartSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
-    stockQuentity: {
+    stockQuantity: {
         type: Number,
         required: true,
     },
@@ -46,5 +38,5 @@ const cartSchema = mongoose.Schema({
     }
 })
 
-const CartModel = mongoose.model("CartModel", cartSchema);
-export default CartModel
+const WishlistModel = mongoose.model("WishlistModel", wishlishSchema);
+export default WishlistModel

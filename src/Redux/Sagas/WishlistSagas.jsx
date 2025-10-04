@@ -1,11 +1,11 @@
 import { CREATE_WISHLIST, CREATE_WISHLIST_RED, DELETE_WISHLIST, DELETE_WISHLIST_RED, GET_WISHLIST, GET_WISHLIST_RED } from "../Constent";
 // import { createmultipathRecord, createRecord, deleteRecord, getRecord, updateRecord } from './Services/Index';
 import { createRecord, deleteRecord, getRecord, updatemultiRecord, updateRecord } from './Services/Index';
-import { takeEvery, put } from "redux-saga/effects";
+import { takeEvery, put, call } from "redux-saga/effects";
 
 
 function* createSaga(action) {
-    let responce = yield createRecord("wishlist",action.payload)
+    let responce = yield call(createRecord, "wishlist", action.payload)
     yield put({ type: CREATE_WISHLIST_RED, payload: responce })
 
     // let responce = yield createmultipathRecord("wishlist")
@@ -13,7 +13,7 @@ function* createSaga(action) {
 }
 
 function* getSaga(action) {
-    let responce = yield getRecord("wishlist", action.payload)
+    let responce = yield call(getRecord, "wishlist", action.payload)
     yield put({ type: GET_WISHLIST_RED, payload: responce })
 }
 // function* updateSaga(action) {
@@ -24,7 +24,7 @@ function* getSaga(action) {
 //     // yield put({ type: UPDATE_WISHLIST_RED, payload: action.payload })
 // }
 function* deleteSaga(action) {
-    let responce = yield deleteRecord("wishlist", action.payload)
+    let responce = yield call(deleteRecord, "wishlist", action.payload)
     yield put({ type: DELETE_WISHLIST_RED, payload: action.payload })
 }
 export default function* wishlistSagas() {

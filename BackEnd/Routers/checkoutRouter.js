@@ -35,26 +35,31 @@ checkoutRouter.get("/get", async (req, res) => {
     }
 })
 
-checkoutRouter.post("create", upload.array("pic"), async (req, res) => {
+checkoutRouter.post("/create", upload.any(), async (req, res) => {
     try {
-        const { userid, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date } = req.body;
-        if (!req.files && req.files.length === 0) {
-            return res.status(404).json("Product are Required")
+        let  { user, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date,product } = req.body;
+         
+         if (product) {
+            product = JSON.parse(product);   // <--- parse here
         }
-        const product = req.files.map(pic => pic.path);
+
+        if (date) {
+            date = new Date(date);  // ensure date object
+        }
 
         const newdate = new CheckoutModel({
-            userid, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date, product,
+            user, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date, product,
         })
 
         await newdate.save();
-        return res.status(500).json({ message: "Data Saved Sucessfully" })
+        return res.status(200).json({ message: "Data Saved Sucessfully" })
     } catch (err) {
+        console.log(err.message)
         return res.status(500).json({ message: err.message })
     }
 })
 
-checkoutRouter.put("/update/:id", upload.array("pic"), async (req, res) => {
+checkoutRouter.put("/update/:id", upload.any(), async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -63,10 +68,10 @@ checkoutRouter.put("/update/:id", upload.array("pic"), async (req, res) => {
         let existdata = await CheckoutModel.findById(id);
         if (!existdata) return res.status(404).json({ message: "Data Not Found" })
 
-        let { userid, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date } = req.body;
-        const product = req.files && req.files.length > 0 ? req.files.map(pic => pic.path) : existdata.product
+        let { user, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date, product } = req.body;
+        product = product?.length ? product : existdata.product;
 
-        userid = userid ? userid : existdata.userid;
+        user = user ? user : existdata.user;
         OrderStatus = OrderStatus ? OrderStatus : existdata.OrderStatus;
         PaymentMode = PaymentMode ? PaymentMode : existdata.PaymentMode;
         PaymentStatus = PaymentStatus ? PaymentStatus : existdata.PaymentStatus;
@@ -76,7 +81,7 @@ checkoutRouter.put("/update/:id", upload.array("pic"), async (req, res) => {
         date = date ? date : existdata.date;
 
         await CheckoutModel.findByIdAndUpdate(id,
-            { userid, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date, product }, { new: true, runValidator: true }
+            { user, OrderStatus, PaymentMode, PaymentStatus, subtotal, shipping, total, date, product }, { new: true, runValidator: true }
         )
 
         res.status(201).json({ message: "Data Updated Sucessfully" })

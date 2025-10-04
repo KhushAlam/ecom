@@ -22,7 +22,7 @@ export default function UserProfile() {
 
   function getapidata() {
     dispatch(getwishlist())
-    if (wishliststatedata?.length) {
+    if (wishliststatedata) {
       setdata(wishliststatedata.filter(x => x.user === localStorage.getItem("userid")))
     }
     else {
@@ -39,17 +39,19 @@ export default function UserProfile() {
 
   useEffect(() => {
     getapidata()
-  }, [wishliststatedata.length])
+  }, [wishliststatedata])
 
 
   useEffect(() => {
     (() => {
       dispatch(getcheckout())
-      if (checkoutstatedata.length) {
-        setorders(checkoutstatedata.filter((x) => x.user === localStorage.getItem("userid")))
+      if (checkoutstatedata?.length) {
+        setorders(checkoutstatedata?.filter((x) => x.user === localStorage.getItem("userid")))
+      }else{
+        setorders([])
       }
     })()
-  }, [checkoutstatedata.length])
+  }, [])
 
 
   return (
@@ -59,7 +61,7 @@ export default function UserProfile() {
         <Profile title="Buyer" />
         <h5 className='form-control btn btn-primary w-100'>Wishlist section</h5>
         {
-          data.length ?
+          data ?
             <>
             <div className="table-responsive">
               <table className='table table-bordered table-striped table-hover'>
@@ -77,9 +79,9 @@ export default function UserProfile() {
                 <tbody>
                   {
                     data.map((item) => {
-                      return <tr key={item.id}>
-                        <td><Link to={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} target='_blank' rel='noreferrer'></Link>
-                          <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} height={50} width={80} /></td>
+                      return <tr key={item._id}>
+                        <td><Link to={`${item.pic}`} target='_blank' rel='noreferrer'></Link>
+                          <img src={`${item.pic}`} height={50} width={80} /></td>
                         <td>{item.name}</td>
                         <td>{item.brand}</td>
                         <td>{item.color}</td>
@@ -87,7 +89,7 @@ export default function UserProfile() {
                         <td>{item.stock ? `${item.stockquentity} are left` : "Out of Stock"}</td>
                         <td>&#8377;{item.price}</td>
                         <td><Link to={`/product/${item.product}`} className='btn btn-primary'><i className='fa fa-shopping-cart fs-5  text-light '></i></Link></td>
-                        <td><button className='btn btn-danger' onClick={() => { handledeletewishlist(item.id) }}><i className='fa fa-trash fs-5 b text-light'></i></button></td>
+                        <td><button className='btn btn-danger' onClick={() => { handledeletewishlist(item._id) }}><i className='fa fa-trash fs-5 b text-light'></i></button></td>
                       </tr>
                     })
                   }
@@ -99,7 +101,7 @@ export default function UserProfile() {
         }
          <h5 className='form-control btn btn-primary w-100'>Order history</h5>
         {
-          orders.length ?
+          orders ?
             <>
              {orders.map((item)=>{
               return <div className='row border-bottom border-3 border-secondary' key={item.id}>
@@ -109,7 +111,7 @@ export default function UserProfile() {
                       <tbody>
                         <tr> 
                           <th>Order id</th>
-                          <td>{item.id}</td>
+                          <td>{item._id}</td>
                         </tr>
                         <tr> 
                           <th>Order Status</th>

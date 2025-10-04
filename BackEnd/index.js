@@ -11,6 +11,8 @@ import brandRouter from "./Routers/brandRouter.js";
 import productRouter from "./Routers/productRoter.js";
 import userRouter from "./Routers/userRouter.js";
 import checkoutRouter from "./Routers/checkoutRouter.js";
+import CartRouter from "./Routers/cartRouter.js";
+import WishlistRoute from "./Routers/wishlistRouter .js";
 dotenv.config();
 
 
@@ -41,6 +43,8 @@ app.use("/admin/brand", brandRouter)
 app.use("/admin/product", productRouter)
 app.use("/user", userRouter);
 app.use("/checkout", checkoutRouter)
+app.use("/cart",CartRouter);
+app.use("/wishlist",WishlistRoute)
 app.listen(port, () => {
     console.log("server running on port 8080")
 });

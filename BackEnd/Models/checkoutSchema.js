@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const chekoutSchema = mongoose.Schema({
-    userid: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
@@ -35,10 +35,13 @@ const chekoutSchema = mongoose.Schema({
         type: Date,
         required: true,
     },
-    product: {
-        type: [String],
-        default: [],
-    }
+    product: [
+  {
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: "Productmodel" },
+    quantity: Number
+  }
+]
+
 })
 
 const CheckoutModel = mongoose.model("CheckModel", chekoutSchema);

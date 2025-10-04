@@ -55,11 +55,15 @@ export default function ProductPage() {
                 color: product.color,
                 size: product.size,
                 price: product.finalPrice,
-                stockQuantity: product.stockQuantity,
+                stockQuentity: product.stockQuantity,
                 pic: product.pic[0],
 
             }
-            dispatch(createcart(item))
+            const Fromdata = new FormData()
+            Object.keys(item).forEach(key => {
+                Fromdata.append(key, item[key])
+            })
+            dispatch(createcart(Fromdata))
         }
         navigate("/cart")
     }
@@ -79,8 +83,11 @@ export default function ProductPage() {
                 stockQuantity: product.stockQuantity,
                 pic: product.pic[0],
             }
-
-            dispatch(Createwishlist(item))
+            const Fromdata = new FormData()
+            Object.keys(item).forEach(key => {
+                Fromdata.append(key, item[key])
+            })
+            dispatch(Createwishlist(Fromdata))
         }
         navigate("/profile")
     }
@@ -173,7 +180,7 @@ export default function ProductPage() {
                                 </tr>
                                 <tr>
                                     <th>Description</th>
-                                    <td><div dangerouslySetInnerHTML={{ __html: product.discription }}></div></td>
+                                    <td><div dangerouslySetInnerHTML={{ __html: product.description }}></div></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -28,6 +28,7 @@ import AdminupdateProduct from "./Pages/Admin/Product/AdminupdateProduct";
 import AdminTestimonial from "./Pages/Admin/Testimonial/AdminTestimonial";
 import AdminupdateTestimonial from "./Pages/Admin/Testimonial/AdminupdateTestimonial";
 import AdmincreateTestimonial from "./Pages/Admin/Testimonial/AdmincreateTestimonial";
+
 import ProductPage from "./Pages/ProductPage";
 import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
@@ -52,7 +53,7 @@ import Forgetpassword from "./Components/Forgetpassword";
 export default function App() {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Navbar />
         <Routes>
           <Route path='/' element={<Homepage />} />

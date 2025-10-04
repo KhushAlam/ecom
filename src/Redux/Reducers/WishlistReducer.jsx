@@ -4,10 +4,10 @@ export default function WishlistReducer(state = [], action) {
         case CREATE_WISHLIST_RED:
             return [...state, action.payload]
         case GET_WISHLIST_RED:
-            return action.payload
+            return action.payload.data
 
         case DELETE_WISHLIST_RED:
-            return state.filter(x => x.id !== action.payload.id)
+            return state.filter(x => x._id !== action.payload._id)
 
         default:
             return state

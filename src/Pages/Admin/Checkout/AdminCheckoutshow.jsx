@@ -11,6 +11,7 @@ export default function Admincheckoutshow() {
   let [OrderStatus, setorderStatus] = useState("");
   let [PaymentStatus, setpaymentstatus] = useState("")
   let [flag, setflag] = useState(false)
+  let [product, setproduct] = useState([])
 
   let navigate = useNavigate()
   let dispach = useDispatch()
@@ -20,6 +21,7 @@ export default function Admincheckoutshow() {
   let [user, setuser] = useState({})
 
   let checkoutstatedata = useSelector(state => state.checkoutstatedata)
+
 
   // async function deleteitem() {
   //   if (window.confirm("Are you sure to delete item")) {
@@ -32,9 +34,13 @@ export default function Admincheckoutshow() {
     if (window.confirm("Are you sure to update item")) {
       data.OrderStatus = OrderStatus;
       data.PaymentStatus = PaymentStatus;
-      dispach(updatecheckout({
-        ...data
-      }))
+
+      const Fromdata = new FormData()
+      Object.keys(data).forEach(key => {
+        Fromdata.append(key, data[key])
+      })
+
+      dispach(updatecheckout(Fromdata))
       setflag(!flag)
     }
   }
@@ -47,14 +53,23 @@ export default function Admincheckoutshow() {
         setorderStatus(item.OrderStatus);
         setpaymentstatus(item.PaymentStatus);
 
-        let responce = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/${item.user}`, {
+        let responce = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}user/get/${item.user}`, {
           method: "GET",
           headers: {
             "content-type": "application/json"
           }
         })
         responce = await responce.json()
-        setuser(responce)
+        setuser(responce.data)
+
+        let product = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}product/get/${item.productId}`, {
+          method: "GET",
+          headers: {
+            "content-type": "application/json"
+          }
+        })
+        product = await product.json()
+        setproduct(product.data)
       }
       else {
         navigate("/admin/checkout")
@@ -64,7 +79,7 @@ export default function Admincheckoutshow() {
   }
   useEffect(() => {
     getapidata()
-  }, [checkoutstatedata])
+  }, [])
 
   return (
     <>
@@ -89,7 +104,7 @@ export default function Admincheckoutshow() {
                     <th>User</th>
                     <td>{user.name} <br />
                       {user.phone},{user.email} <br />
-                      {user.address} <br />{user.pin},{user.city},{user.state}</td>
+                      {user.address} <br />{user.pincode},{user.city},{user.state}</td>
                   </tr>
                   <tr>
                     <th>Order Status</th>
@@ -125,6 +140,10 @@ export default function Admincheckoutshow() {
                     </td>
                   </tr>
                   <tr>
+                    <th>Product Quentity</th>
+                    <td>{}</td>
+                  </tr>
+                  <tr>
                     <th>Subtotal</th>
                     <td>&#8377;{data.subtotal}</td>
                   </tr>
@@ -152,7 +171,9 @@ export default function Admincheckoutshow() {
                 </tbody>
               </table>
             </div>
-            {data.product && data.product.length ? <Cart title="Products in order" data={data.product} /> : null}
+            {/* {console.log(data.product)} */}
+            {data.product && data.product.length ? <Cart title="Products in order" data={data.product.productid} /> : null}
+
           </div>
         </div>
       </div>

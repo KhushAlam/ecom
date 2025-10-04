@@ -32,6 +32,21 @@ productRouter.get("/get", async (req, res) => {
     }
 })
 
+productRouter.get("/get/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await Productmodel.findById(id);
+
+        if (!data) {
+            return res.status(404).json({ data: [], message: "Data Not Found" })
+        }
+        return res.status(201).json({ data: data, message: "Data Found SucessFully" })
+
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+})
+
 productRouter.post("/create", upload.array("pic"), async (req, res) => {
     try {
         const { name, maincategory, subcategory, brand, color, size, basePrice, disCount, finalPrice, stock, stockQuantity, description, active } = req.body

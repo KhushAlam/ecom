@@ -27,15 +27,22 @@ export default function Cart({ title, data }) {
             shipping: shipping,
             total: total,
             date: new Date(),
-            product: [...cartdata]
+            product: cartdata.map(c => ({
+            productId: c.product,
+            quantity: c.quentity
+        }))
         }
-
-        const Fromdata = new FormData()
-        Object.keys(item).forEach(key =>
-            Fromdata.append(key, item[key])
-        )
+        const Fromdata =new FormData()
+        Object.keys(item).forEach(key => {
+            if (key === "product") {
+                Fromdata.append(key, JSON.stringify(item[key])); // <--- stringify here
+            } else {
+                Fromdata.append(key, item[key]);
+            }
+        });
 
         dispatch(Createcheckout(Fromdata))
+
         cartdata.forEach(cartItem => {
             let product = productstatedata.find(x => x._id === cartItem.product)
             product.stockQuantity = product.stockQuantity - cartItem.quentity
@@ -43,7 +50,7 @@ export default function Cart({ title, data }) {
 
             const Fromdata = new FormData()
             Object.keys(product).forEach(key =>
-                Fromdata.append(key, data[key])
+                Fromdata.append(key, product[key])
             )
             dispatch(updateproduct(Fromdata))
             // dispatch(deletecart({ id: cartItem._id }))
@@ -114,13 +121,13 @@ export default function Cart({ title, data }) {
 
     useEffect(() => {
         cartapidata()
-    }, [cartstatedata])
+    }, [])
 
     useEffect(() => {
         (() => {
             dispatch(getproduct())
         })()
-    }, [productstatedata])
+    }, [])
     return (
         <>
             <div className="container-fluid">
@@ -146,24 +153,24 @@ export default function Cart({ title, data }) {
                                     <tbody>
                                         {
                                             cartdata.map((item) => {
-                                                return <tr key={item.id}>
-                                                    <td><Link to={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} target='_blank' rel='noreferrer'>
-                                                        <img src={`${process.env.REACT_APP_SITE_MAINCATEGORY}${item.pic}`} height={50} width={80} /></Link></td>
+                                                return <tr key={item._id}>
+                                                    <td><Link to={`${item.pic}`} target='_blank' rel='noreferrer'>
+                                                        <img src={`${item.pic}`} height={50} width={80} /></Link></td>
                                                     <td>{item.name}</td>
                                                     <td className={`${title === "Checkout" ? "d-none" : ''}`}>{item.brand}</td>
                                                     <td>{item.color}</td>
                                                     <td>{item.size}</td>
-                                                    <td className={`${title === "Checkout" ? "d-none" : ''}`} >{item.stockQuantity ? `${item.stockQuantity} Product Are left` : "Out of Stock"}</td>
+                                                    <td className={`${title === "Checkout" ? "d-none" : ''}`} >{item.stockQuentity ? `${item.stockQuentity} Product Are left` : "Out of Stock"}</td>
                                                     <td>&#8377;{item.price}</td>
                                                     <td>
                                                         <div className="btn-group">
-                                                            <div className={` ${title === 'Checkout' || title === "Products in order" ? '' : "btn btn-primary"}`}><i className={`fa fa-minus ${title === "Checkout" || title === "Products in order" ? "d-none" : ''}`} onClick={() => { updaterecord(item.id, "DEC") }}></i></div>
+                                                            <div className={` ${title === 'Checkout' || title === "Products in order" ? '' : "btn btn-primary"}`}><i className={`fa fa-minus ${title === "Checkout" || title === "Products in order" ? "d-none" : ''}`} onClick={() => { updaterecord(item._id, "DEC") }}></i></div>
                                                             <h4 className='text-center ms-3 me-3 w-50'>{item.quentity}</h4>
-                                                            <div className={` ${title === 'Checkout' || title === "Products in order" ? '' : "btn btn-primary"}`}><i className={`fa fa-plus ${title === "Checkout" || title === "Products in order" ? "d-none" : ''}`} onClick={() => { updaterecord(item.id, "INC") }}></i></div>
+                                                            <div className={` ${title === 'Checkout' || title === "Products in order" ? '' : "btn btn-primary"}`}><i className={`fa fa-plus ${title === "Checkout" || title === "Products in order" ? "d-none" : ''}`} onClick={() => { updaterecord(item._id, "INC") }}></i></div>
                                                         </div>
                                                     </td>
                                                     <td>&#8377;{item.total}</td>
-                                                    <td className={`${title !== "Cart" ? "d-none" : ""}`}><button className={`btn btn-danger ${title === 'Checkout' ? 'd-none' : ""}`} onClick={() => { deletehandle(item.id) }} ><i className={`fa fa-trash fs-5 b text-light ${title === "Checkout" ? "d-none" : ''}`}></i></button></td>
+                                                    <td className={`${title !== "Cart" ? "d-none" : ""}`}><button className={`btn btn-danger ${title === 'Checkout' ? 'd-none' : ""}`} onClick={() => { deletehandle(item._id) }} ><i className={`fa fa-trash fs-5 b text-light ${title === "Checkout" ? "d-none" : ''}`}></i></button></td>
                                                 </tr>
                                             })
                                         }
