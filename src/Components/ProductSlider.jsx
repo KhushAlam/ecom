@@ -43,7 +43,7 @@ export default function ProductSlider({ tittle, data }) {
             <Swiper {...Option}>
               {
                 data.map((item) => {
-                  return <SwiperSlide style={{ height: 650 }} key={item.id}>
+                  return <SwiperSlide style={{ height: 650 }} key={item._id}>
                     <div
                       className="d-flex align-items-stretch"
                       data-aos="fade-up"
@@ -66,7 +66,7 @@ export default function ProductSlider({ tittle, data }) {
                             <del>&#8377;{item.basePrice}</del> &#8377;{item.finalPrice} <sup>{item.disCount}% Off</sup>
                           </p>
                           <div className="">
-                            <Link to={`/product/${item.id}`} className="w-100 btn btn-primary"><i className="fa fa-shopping-cart"></i> Add to cart</Link>
+                            <Link to={`/product/${item._id}`} className="w-100 btn btn-primary"><i className="fa fa-shopping-cart"></i> Add to cart</Link>
                           </div>
                         </div>
                       </div>

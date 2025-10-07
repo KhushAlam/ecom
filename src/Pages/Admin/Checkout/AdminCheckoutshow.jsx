@@ -11,7 +11,7 @@ export default function Admincheckoutshow() {
   let [OrderStatus, setorderStatus] = useState("");
   let [PaymentStatus, setpaymentstatus] = useState("")
   let [flag, setflag] = useState(false)
-  let [product, setproduct] = useState([])
+  let [products, setproducts] = useState([])
 
   let navigate = useNavigate()
   let dispach = useDispatch()
@@ -62,14 +62,17 @@ export default function Admincheckoutshow() {
         responce = await responce.json()
         setuser(responce.data)
 
-        let product = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}product/get/${item.productId}`, {
+        let productid = item.product[0].productId;
+        console.log(productid)
+        let product = await fetch(`${process.env.REACT_APP_SITE_MAINCATEGORY}admin/product/get/${productid}`, {
           method: "GET",
           headers: {
             "content-type": "application/json"
           }
         })
         product = await product.json()
-        setproduct(product.data)
+        setproducts(product.data)
+        console.log(product.data)
       }
       else {
         navigate("/admin/checkout")
@@ -141,7 +144,7 @@ export default function Admincheckoutshow() {
                   </tr>
                   <tr>
                     <th>Product Quentity</th>
-                    <td>{}</td>
+                    <td>{data?.product?.map(item=>item.quantity)}</td>
                   </tr>
                   <tr>
                     <th>Subtotal</th>
@@ -171,8 +174,34 @@ export default function Admincheckoutshow() {
                 </tbody>
               </table>
             </div>
+            <div className="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Brand</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                    <th>Pic</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {products&&products.length?products?.map(item=>{
+                      return <tr>
+                        <td>{item.name}</td>
+                        <td>{item.brand}</td>
+                        <td>{item.color}</td>
+                        <td>{item.size}</td>
+                        <td height={100} width={100}>{item.pic[0]}</td>
+                      </tr>
+                    }):null}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             {/* {console.log(data.product)} */}
-            {data.product && data.product.length ? <Cart title="Products in order" data={data.product.productid} /> : null}
+            {/* {data.product && data.product.length ? <Cart title="Products in order" data={data.product.productid} /> : null} */}
 
           </div>
         </div>

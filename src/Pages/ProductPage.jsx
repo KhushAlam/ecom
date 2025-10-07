@@ -32,7 +32,7 @@ export default function ProductPage() {
                 setrelatedproduct(productstatedata.filter(x => x.maincategory === item.maincategory && x._id !== item._id));
             }
         }
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         dispatch(getcart())

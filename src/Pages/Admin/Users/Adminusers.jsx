@@ -13,11 +13,16 @@ export default function Adminusers() {
   let userstatedata = useSelector(state => state.userstatedata)
 
   async function deleteitem(id) {
-    if (window.confirm("Are you sure to delete item")) {
-      dispach(deleteusers({ id: id }))
-      getapidata();
+      if (window.confirm("Are you sure to delete item")) {
+        let item = userstatedata?.find(x => x._id === id);
+        const Fromdata = new FormData();
+        Object.keys(item).forEach(key => {
+          Fromdata.append(key, item[key])
+        })
+        dispach(deleteusers(Fromdata))
+        getapidata();
+      }
     }
-  }
   function getapidata() {
     dispach(getusers())
 

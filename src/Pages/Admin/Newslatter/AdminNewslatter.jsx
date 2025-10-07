@@ -24,6 +24,7 @@ export default function Adminnewslatter() {
       getapidata();
     }
   }
+  
   async function updateactive(id) {
     if (window.confirm("Are you sure to update active status")) {
       let item = newslatterstatedata.find(x => x._id === id)

@@ -14,7 +14,12 @@ export default function Adminbrand() {
 
   async function deleteitem(id) {
     if (window.confirm("Are you sure to delete item")) {
-      dispach(deletebrand({ id: id }))
+      let item = brandstatedata?.find(x => x._id === id);
+      const Fromdata = new FormData();
+      Object.keys(item).forEach(key => {
+        Fromdata.append(key, item[key])
+      })
+      dispach(deletebrand(Fromdata))
       getapidata();
     }
   }
@@ -64,7 +69,7 @@ export default function Adminbrand() {
                   {
                     brandstatedata.map((item) => {
                       return <tr key={item._id}>
-                        <td>{item._id?.slice(0,4)}</td>
+                        <td>{item._id?.slice(0, 4)}</td>
                         <td>{item.name}</td>
                         <td><Link to={`${item.pic}`} target="_blank">
                           <img src={`${item.pic}`} height={60} width={60} /></Link></td>

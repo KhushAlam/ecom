@@ -4,18 +4,83 @@ import { Link, useNavigate } from 'react-router-dom';
 import { deletecart, getcart, updatecart } from "./../Redux/ActionCreator/CartActionCreator"
 import { Createcheckout } from './../Redux/ActionCreator/CheckOutActionCreator';
 import { getproduct, updateproduct } from './../Redux/ActionCreator/ProductActionCreator';
-
+import Rezerpay from "../Components/Rezerpay"
 export default function Cart({ title, data }) {
     let [cartdata, setcartdata] = useState(data ? data : []);
     let [total, settotal] = useState(0);
     let [subtotal, setsubtotal] = useState(0);
     let [shipping, setshippin] = useState(0);
     let [mode, setmode] = useState("COD")
+    let notes = {};
 
     let cartstatedata = useSelector(state => state.cartstatedata);
     let productstatedata = useSelector(state => state.productstatedata)
     let dispatch = useDispatch();
     let navigate = useNavigate()
+
+    const handlePayment = async (amountInRupees) => {
+
+        const ok = await Rezerpay();
+        if (!ok) {
+            alert("Razorpay SDK load failed. Check internet.");
+            return;
+        }
+        try {
+            const res = await fetch(
+                `${process.env.REACT_APP_SITE_MAINCATEGORY}api/payments/create-order`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amountInRupees, notes }),
+                }
+            );
+
+            const order = await res.json();
+            if (!order || !order.id) throw new Error("Order creation failed");
+
+            const options = {
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name: "Loan application",
+                description: "Loan Payment",
+                image: "/logo192.png",
+                order_id: order.id,
+                prefill: { name: "", email: "", contact: "" },
+                notes: order.notes || {},
+                handler: async function (response) {
+                    const verifyRes = await fetch(
+                        `${process.env.REACT_APP_SITE_MAINCATEGORY}api/payments/verify`,
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(response),
+                        }
+                    );
+
+                    const verifyJson = await verifyRes.json();
+                    if (verifyJson.success) {
+                        placeOrder()
+                    } else {
+                        alert("Payment verification failed");
+                    }
+                },
+                method: { netbanking: true, card: true, upi: true, wallet: true },
+                modal: { ondismiss: () => { } },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.on("payment.failed", (resp) => {
+                console.error("Payment failed:", resp.error);
+                alert("Payment failed");
+            });
+            rzp.open();
+        } catch (err) {
+            console.error("Payment start failed:", err);
+            alert("Payment start failed");
+        } finally {
+        }
+    };
 
     function placeOrder() {
         let item = {
@@ -28,11 +93,11 @@ export default function Cart({ title, data }) {
             total: total,
             date: new Date(),
             product: cartdata.map(c => ({
-            productId: c.product,
-            quantity: c.quentity
-        }))
+                productId: c.product,
+                quantity: c.quentity
+            }))
         }
-        const Fromdata =new FormData()
+        const Fromdata = new FormData()
         Object.keys(item).forEach(key => {
             if (key === "product") {
                 Fromdata.append(key, JSON.stringify(item[key])); // <--- stringify here
@@ -197,7 +262,7 @@ export default function Cart({ title, data }) {
                                                     <th>Payment Mode</th>
                                                     <td ><select name="payment" className={`form-control w-100 border-3 border-primary form-select`} onChange={(e) => { setmode(e.target.value) }}>
                                                         <option value="COD">COD</option>
-                                                        <option value="NetBanking" disabled>Net Banking/Card/Upi</option>
+                                                        <option value="NetBanking">Net Banking/Card/Upi</option>
                                                     </select></td>
                                                 </tr>
                                                 <tr>
@@ -205,7 +270,7 @@ export default function Cart({ title, data }) {
                                                         title === "Checkout" ?
                                                             <>
                                                                 <th></th>
-                                                                <td><button className='btn btn-primary w-100' onClick={placeOrder} >Place Order</button ></td>
+                                                                <td><button className='btn btn-primary w-100' onClick={mode == "COD" ? placeOrder : () => { handlePayment(total) }}>Place Order</button ></td>
                                                             </> :
                                                             <>
                                                                 <th><Link to={"/checkout"} className='btn btn-primary w-50' >Proceed To Checkout</Link ></th>

@@ -15,11 +15,16 @@ export default function Adminsubcategory() {
 
 
   async function deleteitem(id) {
-    if (window.confirm("Are you sure to delete item")) {
-      dispach(deletesubcategory({ id: id }))
-      getapidata();
+      if (window.confirm("Are you sure to delete item")) {
+        let item = subcategorystatedata?.find(x => x._id === id);
+        const Fromdata = new FormData();
+        Object.keys(item).forEach(key => {
+          Fromdata.append(key, item[key])
+        })
+        dispach(deletesubcategory(Fromdata))
+        getapidata();
+      }
     }
-  }
   function getapidata() {
     dispach(getsubcategory())
 

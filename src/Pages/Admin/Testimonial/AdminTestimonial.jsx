@@ -14,11 +14,16 @@ export default function AdminTestimonial() {
   let [data, setdata] = useState([])
 
   async function deleteitem(id) {
-    if (window.confirm("Are you sure to delete item")) {
-      dispach(deletetestimonial({ id: id }))
-      getapidata();
+      if (window.confirm("Are you sure to delete item")) {
+        let item = testimonialstatedata?.find(x => x._id === id);
+        const Fromdata = new FormData();
+        Object.keys(item).forEach(key => {
+          Fromdata.append(key, item[key])
+        })
+        dispach(deletetestimonial(Fromdata))
+        getapidata();
+      }
     }
-  }
   function getapidata() {
     dispach(gettestimonial())
 

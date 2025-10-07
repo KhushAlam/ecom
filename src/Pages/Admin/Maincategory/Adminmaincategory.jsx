@@ -13,11 +13,16 @@ export default function Adminhome() {
   let maincategorystatedata = useSelector(state => state.maincategorystatedata)
 
   async function deleteitem(id) {
-    if (window.confirm("Are you sure to delete item")) {
-      dispach(deletemaincategory({id:id}))
-      getapidata();
+      if (window.confirm("Are you sure to delete item")) {
+        let item = maincategorystatedata?.find(x => x._id === id);
+        const Fromdata = new FormData();
+        Object.keys(item).forEach(key => {
+          Fromdata.append(key, item[key])
+        })
+        dispach(deletemaincategory(Fromdata))
+        getapidata();
+      }
     }
-  }
   function getapidata() {
     dispach(getmaincategory())
 

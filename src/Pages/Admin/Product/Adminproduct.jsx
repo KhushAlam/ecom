@@ -14,11 +14,16 @@ export default function Adminproduct() {
   let [data, setdata] = useState([]);
 
   async function deleteitem(id) {
-    if (window.confirm("Are you sure to delete item")) {
-      await dispach(deleteproduct({ id })); // ✅ wait for delete
-      dispach(getproduct()); // ✅ refresh product list from API
+      if (window.confirm("Are you sure to delete item")) {
+        let item = productstatedata?.find(x => x._id === id);
+        const Fromdata = new FormData();
+        Object.keys(item).forEach(key => {
+          Fromdata.append(key, item[key])
+        })
+        dispach(deleteproduct(Fromdata))
+        dispach(getproduct())
+      }
     }
-  }
 
   // run only once on mount
   useEffect(() => {
