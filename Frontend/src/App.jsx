@@ -53,7 +53,7 @@ import Forgetpassword from "./Components/Forgetpassword";
 export default function App() {
   return (
     <>
-      <BrowserRouter basename="/">
+      <BrowserRouter >
         <Navbar />
         <Routes>
           <Route path='/' element={<Homepage />} />
