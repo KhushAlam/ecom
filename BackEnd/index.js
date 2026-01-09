@@ -21,12 +21,17 @@ const port = process.env.PORT
 const app = express()
 
 //middleware 
-app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: ["http://localhost:3000","http://localhost:3001"] , // React app ka origin
-    methods: ["GET", "POST", "PUT", "DELETE"],
+   origin: [
+    "https://ecom-w.onrender.com" // frontend URL
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
 }))
+app.options("*", cors());
+app.use(express.urlencoded({ extended: true }))
+
 app.use(express.json())
 
 
