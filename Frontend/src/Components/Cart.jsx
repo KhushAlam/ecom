@@ -36,7 +36,7 @@ export default function Cart({ title, data }) {
             );
 
             const order = await res.json();
-            if (!order || !order.id) throw new Error("Order creation failed");
+            if (!order || !order._id) throw new Error("Order creation failed");
 
             const options = {
                 key: process.env.REACT_APP_RAZORPAY_KEY_ID,
